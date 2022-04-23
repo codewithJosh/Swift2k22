@@ -7,4 +7,7 @@
     <color name="colorStarCommandBlue">#0479B6</color>
     <color name="colorDavysGrey">#555555</color>
     <color name="colorGainsboro">#DDDDDD</color>
+    <color name="colorAliceBlue">#F1FBFF</color>
+    <color name="colorVividCerulean_B3">#B30FA4F1</color>
+    <color name="colorStarCommandBlue_99">#990479B6</color>
 </resources>
