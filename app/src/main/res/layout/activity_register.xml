@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterActivity"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    tools:context=".RegisterActivity">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -23,14 +24,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:padding="15dp"
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="25dp"
-
             android:layout_marginHorizontal="15dp"
+            android:orientation="vertical"
+            android:padding="15dp"
+
+            android:paddingHorizontal="25dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -41,20 +42,20 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:textStyle="bold"
-                android:textColor="?attr/colorPrimary"
                 android:layout_marginStart="16dp"
-                android:text="Create an account"/>
+                android:text="Create an account"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="25sp"
+                android:textStyle="bold" />
 
             <!-- Username -->
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/create_input_decoration_round">
+                android:background="@drawable/create_input_decoration_round"
+                android:orientation="horizontal">
 
 
                 <ImageView
@@ -64,21 +65,21 @@
                     android:layout_marginStart="17dp"
                     android:layout_marginEnd="3dp"
                     android:background="@drawable/ic_user_name"
-                    android:backgroundTint="?attr/colorSecondary"/>
+                    android:backgroundTint="?attr/colorSecondary" />
 
                 <EditText
                     android:id="@+id/username"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:background="@null"
                     android:digits="abcdefghijklmnopqrstuvwxyz1234567890"
                     android:hint="@string/hint_user_name"
-                    android:textColor="?attr/colorOnSecondary"
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:maxLength="16"
-                    android:background="@null"
                     android:paddingHorizontal="10dp"
                     android:singleLine="true"
+                    android:textColor="?attr/colorOnSecondary"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -89,9 +90,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/create_input_decoration_round">
+                android:background="@drawable/create_input_decoration_round"
+                android:orientation="horizontal">
 
 
                 <ImageView
@@ -101,7 +102,7 @@
                     android:layout_marginStart="15dp"
                     android:layout_marginEnd="1dp"
                     android:background="@drawable/ic_email"
-                    android:backgroundTint="?attr/colorSecondary"/>
+                    android:backgroundTint="?attr/colorSecondary" />
 
                 <EditText
                     android:id="@+id/email"
@@ -126,33 +127,34 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/create_input_decoration_round"
-                android:layout_marginTop="20dp">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="30dp"
+                    android:layout_marginVertical="10dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="5dp"
-                    android:layout_marginVertical="10dp"
                     android:adjustViewBounds="true"
-                    android:scaleType="fitXY"
                     android:background="@drawable/ic_password"
-                    android:backgroundTint="?attr/colorSecondary"/>
+                    android:backgroundTint="?attr/colorSecondary"
+                    android:scaleType="fitXY" />
+
                 <EditText
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:background="@null"
                     android:digits="abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*-=_+:;,.?"
                     android:hint="@string/hint_password"
-                    android:textColor="?attr/colorOnSecondary"
-                    android:background="@null"
                     android:imeOptions="actionNext"
                     android:inputType="textPassword"
                     android:maxLength="32"
                     android:paddingHorizontal="10dp"
                     android:singleLine="true"
+                    android:textColor="?attr/colorOnSecondary"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -162,33 +164,34 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/create_input_decoration_round"
-                android:layout_marginTop="20dp">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="30dp"
+                    android:layout_marginVertical="10dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="5dp"
-                    android:layout_marginVertical="10dp"
                     android:adjustViewBounds="true"
-                    android:scaleType="fitXY"
                     android:background="@drawable/ic_password"
-                    android:backgroundTint="?attr/colorSecondary"/>
+                    android:backgroundTint="?attr/colorSecondary"
+                    android:scaleType="fitXY" />
+
                 <EditText
                     android:id="@+id/rePassword"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:background="@null"
                     android:digits="abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*-=_+:;,.?"
                     android:hint="@string/hint_re_password"
-                    android:textColor="?attr/colorOnSecondary"
-                    android:background="@null"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:maxLength="32"
                     android:paddingHorizontal="10dp"
                     android:singleLine="true"
+                    android:textColor="?attr/colorOnSecondary"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -199,11 +202,11 @@
                 android:layout_height="45dp"
                 android:layout_marginTop="20dp"
 
+                android:background="@drawable/create_linear_button_round"
                 android:text="@string/text_sign_up"
                 android:textAllCaps="true"
-                android:textSize="14sp"
                 android:textColor="?attr/colorOnPrimary"
-                android:background="@drawable/create_linear_button_round"/>
+                android:textSize="14sp" />
 
 
             <TextView
@@ -214,8 +217,8 @@
                 android:gravity="center"
                 android:text="Already have an account? Sign In"
                 android:textColor="@color/colorBlack_FF"
-                android:textStyle="italic"
-                android:textSize="6pt" />
+                android:textSize="6pt"
+                android:textStyle="italic" />
 
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

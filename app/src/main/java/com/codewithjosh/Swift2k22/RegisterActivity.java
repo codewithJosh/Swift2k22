@@ -61,20 +61,16 @@ public class RegisterActivity extends AppCompatActivity {
                     || str_password.isEmpty() || str_rePassword.isEmpty()) {
                 _pd.dismiss();
                 Toast.makeText(RegisterActivity.this, "All fields are required!", Toast.LENGTH_SHORT).show();
-            }
-            else if (!(str_email.contains("@") && str_email.endsWith(".com"))) {
+            } else if (!(str_email.contains("@") && str_email.endsWith(".com"))) {
                 _pd.dismiss();
                 Toast.makeText(RegisterActivity.this, "Please provide a valid email address", Toast.LENGTH_SHORT).show();
-            }
-            else if (str_password.length() < 6) {
+            } else if (str_password.length() < 6) {
                 _pd.dismiss();
                 Toast.makeText(RegisterActivity.this, "Password Must be at least 6 characters", Toast.LENGTH_SHORT).show();
-            }
-            else if (!str_password.equals(str_rePassword)) {
+            } else if (!str_password.equals(str_rePassword)) {
                 _pd.dismiss();
                 Toast.makeText(RegisterActivity.this, "Password doesn't match", Toast.LENGTH_SHORT).show();
-            }
-            else _onRegister(str_username, str_email, str_password);
+            } else _onRegister(str_username, str_email, str_password);
 
         });
 
@@ -93,7 +89,7 @@ public class RegisterActivity extends AppCompatActivity {
                             firebaseAuth.createUserWithEmailAndPassword(_email, _password)
                                     .addOnCompleteListener(RegisterActivity.this, task -> {
 
-                                        if (task.isSuccessful()){
+                                        if (task.isSuccessful()) {
 
                                             final String _userId = firebaseAuth.getCurrentUser().getUid();
 
@@ -118,21 +114,18 @@ public class RegisterActivity extends AppCompatActivity {
 
                                     }).addOnFailureListener(_e -> {
 
-                                if(_e.toString().contains("The email address is already in use by another account")) {
+                                if (_e.toString().contains("The email address is already in use by another account")) {
                                     _pd.dismiss();
                                     Toast.makeText(RegisterActivity.this, "Email is Already Exist!", Toast.LENGTH_SHORT).show();
-                                }
-                                else if (_e.toString().contains("A network error (such as timeout, interrupted connection or unreachable host) has occurred")) {
+                                } else if (_e.toString().contains("A network error (such as timeout, interrupted connection or unreachable host) has occurred")) {
                                     _pd.dismiss();
                                     Toast.makeText(RegisterActivity.this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
-                                }
-                                else {
+                                } else {
                                     _pd.dismiss();
                                     Toast.makeText(RegisterActivity.this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
                                 }
                             });
-                        }
-                        else {
+                        } else {
                             _pd.dismiss();
                             Toast.makeText(RegisterActivity.this, "Username is already taken!", Toast.LENGTH_SHORT).show();
                         }
