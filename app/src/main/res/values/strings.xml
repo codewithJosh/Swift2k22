@@ -4,4 +4,6 @@
     <string name="hint_password">Password</string>
     <string name="text_sign_in">sign in</string>
     <string name="text_sign_up">sign up</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_re_password">Re-Enter Password</string>
 </resources>
