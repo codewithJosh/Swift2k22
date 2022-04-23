@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Swift">
         <activity
+            android:name=".ReservationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PaymentActivity"
+            android:exported="false" />
+        <activity
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity
