@@ -101,6 +101,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
                                 if (bus_fare != null) holder._busFare.setText("PHP " + bus_fare + ".00");
                                 else holder._busFare.setText("UNAVAILABLE");
 
+                                holder.setListener(position, holder._theHiddenBox, holder._theMainBox);
                             }
                         }
                     }
@@ -143,6 +144,13 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
             _theMainBox = itemView.findViewById(R.id.main_box);
             _theHiddenBox = itemView.findViewById(R.id.hidden_box);
 
+        }
+
+        public void setListener(int position, ConstraintLayout constraintLayout, ConstraintLayout clickable) {
+            clickable.setOnClickListener(view -> {
+                if (constraintLayout.getVisibility() == View.VISIBLE) constraintLayout.setVisibility(View.GONE);
+                else constraintLayout.setVisibility(View.VISIBLE);
+            });
         }
 
     }
