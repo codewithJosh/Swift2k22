@@ -54,12 +54,10 @@ public class LoginActivity extends AppCompatActivity {
             if (str_username.isEmpty() || str_password.isEmpty()) {
                 _pd.dismiss();
                 Toast.makeText(LoginActivity.this, "All fields are required!", Toast.LENGTH_SHORT).show();
-            }
-            else if (str_password.length() < 6) {
+            } else if (str_password.length() < 6) {
                 _pd.dismiss();
                 Toast.makeText(LoginActivity.this, "Password Must be at least 6 characters", Toast.LENGTH_SHORT).show();
-            }
-            else _onLogin(str_username, str_password);
+            } else _onLogin(str_username, str_password);
 
         });
 
@@ -79,8 +77,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             _pd.dismiss();
                             Toast.makeText(LoginActivity.this, "User Doesn't Exist!", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
+                        } else {
 
                             for (QueryDocumentSnapshot snapshot : task.getResult()) {
 
@@ -102,12 +99,10 @@ public class LoginActivity extends AppCompatActivity {
                                     if (e.toString().contains("The password is invalid or the user does not have a password")) {
                                         _pd.dismiss();
                                         Toast.makeText(LoginActivity.this, "Incorrect Password!", Toast.LENGTH_SHORT).show();
-                                    }
-                                    else if (e.toString().contains("A network error (such as timeout, interrupted connection or unreachable host) has occurred")) {
+                                    } else if (e.toString().contains("A network error (such as timeout, interrupted connection or unreachable host) has occurred")) {
                                         _pd.dismiss();
                                         Toast.makeText(LoginActivity.this, "Internet Connection Lost!", Toast.LENGTH_SHORT).show();
-                                    }
-                                    else {
+                                    } else {
                                         _pd.dismiss();
                                         Toast.makeText(LoginActivity.this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
                                     }
