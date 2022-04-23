@@ -5,4 +5,6 @@
     <color name="colorWhite_FF">#FFFFFFFF</color>
     <color name="colorVividCerulean">#0FA4F1</color>
     <color name="colorStarCommandBlue">#0479B6</color>
+    <color name="colorDavysGrey">#555555</color>
+    <color name="colorGainsboro">#DDDDDD</color>
 </resources>
