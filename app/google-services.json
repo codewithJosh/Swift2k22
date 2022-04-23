@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1013539926754",
+    "project_id": "swift-2k22",
+    "storage_bucket": "swift-2k22.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013539926754:android:e06ac628d278ec265b64bb",
+        "android_client_info": {
+          "package_name": "com.codewithjosh.Swift2k22"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1013539926754-1t7piuncgvv06g6honjbb99oa33ttrbv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJbaUZ2pcCHNgYNDBIyjAmB9Qxf9nNMYo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1013539926754-1t7piuncgvv06g6honjbb99oa33ttrbv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
