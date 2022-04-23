@@ -5,6 +5,7 @@ import java.util.Date;
 
 public class BusModel {
 
+    public static Comparator<BusModel> _comparator = (_bM1, _bM2) -> _bM1.getBus_timestamp().compareTo(_bM2.getBus_timestamp());
     private final String route_id;
     private final String bus_id;
     private final String bus_number;
@@ -44,7 +45,5 @@ public class BusModel {
     public String getBus_fare() {
         return bus_fare;
     }
-
-    public static Comparator<BusModel> _comparator = (_bM1, _bM2) -> _bM1.getBus_timestamp().compareTo(_bM2.getBus_timestamp());
 
 }

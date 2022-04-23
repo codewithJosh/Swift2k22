@@ -33,6 +33,8 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
     public Context _mContext;
     public List<RouteModel> _routeList;
     public List<BusModel> _busList;
+    FirebaseFirestore firebaseFirestore;
+    DateFormat formatter;
 
     public RouteAdapter(Context _mContext, List<RouteModel> _routeList, List<BusModel> _busList) {
         this._mContext = _mContext;
@@ -40,9 +42,10 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
         this._busList = _busList;
     }
 
-    FirebaseFirestore firebaseFirestore;
-
-    DateFormat formatter;
+    private static Date _currentDate() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.getTime();
+    }
 
     @NonNull
     @Override
@@ -67,7 +70,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
                 .get()
                 .addOnCompleteListener(task -> {
 
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
 
                         for (QueryDocumentSnapshot snapshot : task.getResult()) {
                             final Date _date = snapshot.getDate("bus_timestamp");
@@ -94,15 +97,18 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
                                 Collections.sort(_busList, BusModel._comparator);
 
                                 formatter = new SimpleDateFormat("MMMM dd, yyyy");
-                                if (_date != null) holder._busTimestamp.setText(formatter.format(_date));
+                                if (_date != null)
+                                    holder._busTimestamp.setText(formatter.format(_date));
                                 else holder._busFare.setText("UNAVAILABLE");
 
                                 formatter = new SimpleDateFormat("h:mm a");
-                                if (_date != null) holder._busDateTimestamp.setText(formatter.format(_date));
+                                if (_date != null)
+                                    holder._busDateTimestamp.setText(formatter.format(_date));
                                 else holder._busFare.setText("UNAVAILABLE");
 
                                 final String bus_fare = snapshot.getString("bus_fare");
-                                if (bus_fare != null) holder._busFare.setText("PHP " + bus_fare + ".00");
+                                if (bus_fare != null)
+                                    holder._busFare.setText("PHP " + bus_fare + ".00");
                                 else holder._busFare.setText("UNAVAILABLE");
 
                                 holder.setListener(position, holder._theHiddenBox, holder._theMainBox);
@@ -119,8 +125,11 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
                                             .collection("Tickets")
                                             .whereEqualTo("bus_id", snapshot.getString("bus_id"))
                                             .addSnapshotListener((_v, e) -> {
-                                                if (_v != null) if (Integer.parseInt(snapshot.getString("bus_slots")) - _v.size() != 0) _mContext.startActivity(i);
-                                                else Toast.makeText(_mContext, "Reservation is already full!", Toast.LENGTH_SHORT).show();
+                                                if (_v != null)
+                                                    if (Integer.parseInt(snapshot.getString("bus_slots")) - _v.size() != 0)
+                                                        _mContext.startActivity(i);
+                                                    else
+                                                        Toast.makeText(_mContext, "Reservation is already full!", Toast.LENGTH_SHORT).show();
                                             });
                                 });
                             }
@@ -128,7 +137,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
                     }
                 });
 
-        if( position % 2 == 0){
+        if (position % 2 == 0) {
             holder._theMainBox.setBackgroundColor(_mContext.getResources().getColor(R.color.colorBlueJeans));
             holder._onBookSchedule.setBackgroundColor(_mContext.getResources().getColor(R.color.colorBlueJeans));
         }
@@ -140,11 +149,6 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
             _mContext.startActivity(i);
         });
 
-    }
-
-    private static Date _currentDate() {
-        Calendar calendar = Calendar.getInstance();
-        return calendar.getTime();
     }
 
     @Override
@@ -176,7 +180,8 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
 
         public void setListener(int position, ConstraintLayout constraintLayout, ConstraintLayout clickable) {
             clickable.setOnClickListener(view -> {
-                if (constraintLayout.getVisibility() == View.VISIBLE) constraintLayout.setVisibility(View.GONE);
+                if (constraintLayout.getVisibility() == View.VISIBLE)
+                    constraintLayout.setVisibility(View.GONE);
                 else constraintLayout.setVisibility(View.VISIBLE);
             });
         }

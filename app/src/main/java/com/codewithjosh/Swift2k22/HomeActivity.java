@@ -1,12 +1,11 @@
 package com.codewithjosh.Swift2k22;
 
+import android.os.Bundle;
+import android.widget.Button;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.widget.Button;
 
 import com.codewithjosh.Swift2k22.adapters.RouteAdapter;
 import com.codewithjosh.Swift2k22.models.BusModel;
@@ -21,12 +20,10 @@ public class HomeActivity extends AppCompatActivity {
 
     Button _onViewScheduleProof;
     RecyclerView _recyclerRoutes;
-
+    FirebaseFirestore firebaseFirestore;
     private RouteAdapter _routeAdapter;
     private List<RouteModel> _routeList;
     private List<BusModel> _busList;
-
-    FirebaseFirestore firebaseFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
