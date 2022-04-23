@@ -1,17 +1,21 @@
 package com.codewithjosh.Swift2k22.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.codewithjosh.Swift2k22.PaymentActivity;
 import com.codewithjosh.Swift2k22.R;
+import com.codewithjosh.Swift2k22.ReservationActivity;
 import com.codewithjosh.Swift2k22.models.BusModel;
 import com.codewithjosh.Swift2k22.models.RouteModel;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -102,6 +106,23 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
                                 else holder._busFare.setText("UNAVAILABLE");
 
                                 holder.setListener(position, holder._theHiddenBox, holder._theMainBox);
+
+                                holder._onBookSchedule.setOnClickListener(v -> {
+
+                                    Intent i = new Intent(_mContext, PaymentActivity.class);
+                                    i.putExtra("bus_id", snapshot.getString("bus_id"));
+                                    i.putExtra("route_name", route_name);
+                                    i.putExtra("bus_number", snapshot.getString("bus_number"));
+                                    i.putExtra("bus_fare", bus_fare);
+
+                                    firebaseFirestore
+                                            .collection("Tickets")
+                                            .whereEqualTo("bus_id", snapshot.getString("bus_id"))
+                                            .addSnapshotListener((_v, e) -> {
+                                                if (_v != null) if (Integer.parseInt(snapshot.getString("bus_slots")) - _v.size() != 0) _mContext.startActivity(i);
+                                                else Toast.makeText(_mContext, "Reservation is already full!", Toast.LENGTH_SHORT).show();
+                                            });
+                                });
                             }
                         }
                     }
@@ -111,6 +132,13 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
             holder._theMainBox.setBackgroundColor(_mContext.getResources().getColor(R.color.colorBlueJeans));
             holder._onBookSchedule.setBackgroundColor(_mContext.getResources().getColor(R.color.colorBlueJeans));
         }
+
+        holder._onViewMoreSchedule.setOnClickListener(v -> {
+            Intent i = new Intent(_mContext, ReservationActivity.class);
+            i.putExtra("route_id", _route.getRoute_id());
+            i.putExtra("route_name", route_name);
+            _mContext.startActivity(i);
+        });
 
     }
 
