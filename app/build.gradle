@@ -42,4 +42,6 @@ dependencies {
 
 //    add dependency on Google Firebase Cloud Firestore
     implementation 'com.google.firebase:firebase-firestore:24.0.0'
+
+    implementation 'com.journeyapps:zxing-android-embedded:3.4.0'
 }
