@@ -6,12 +6,22 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class PaymentActivity extends AppCompatActivity {
 
     Button _onPay;
     TextView _routeName, _busNumber, _userBalance, _busFare, _totalAmt;
 
     String route_name, bus_number, bus_fare, bus_id;
+
+    FirebaseAuth firebaseAuth;
+    FirebaseFirestore firebaseFirestore;
+
+    DocumentReference userRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +40,9 @@ public class PaymentActivity extends AppCompatActivity {
         bus_number = getIntent().getStringExtra("bus_number");
         bus_fare = getIntent().getStringExtra("bus_fare");
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
         if (route_name != null) {
 
             final String _fare = "PHP "+ bus_fare +".00";
@@ -40,6 +53,26 @@ public class PaymentActivity extends AppCompatActivity {
             _totalAmt.setText(_fare);
             _onPay.setText("PAY " + _fare);
         }
+
+        final String user_id = firebaseAuth.getCurrentUser().getUid();
+
+        userRef = firebaseFirestore
+                .collection("Users")
+                .document(user_id);
+
+        userRef
+                .get()
+                .addOnCompleteListener(task -> {
+
+                    if (task.isSuccessful()) {
+
+                        DocumentSnapshot doc = task.getResult();
+
+                        final int user_balance = Integer.parseInt(doc.getString("user_balance"));
+
+                        if (user_balance >= 0) _userBalance.setText("PHP "+ user_balance + ".00");
+                    }
+                });
 
     }
 
