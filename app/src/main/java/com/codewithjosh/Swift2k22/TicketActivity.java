@@ -1,6 +1,7 @@
 package com.codewithjosh.Swift2k22;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.inputmethod.InputMethodManager;
@@ -37,6 +38,18 @@ public class TicketActivity extends AppCompatActivity {
     FirebaseFirestore firebaseFirestore;
 
     DateFormat formatter;
+
+    @Override
+    public void onBackPressed() {
+
+        Intent i = new Intent(this, HomeActivity.class);
+        i.putExtra("bus_fare", bus_fare);
+        i.putExtra("bus_id", bus_id);
+        i.putExtra("ticket_id", ticket_id);
+        startActivity(i);
+        finish();
+        
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
