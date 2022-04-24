@@ -85,6 +85,8 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
             holder._onBookSchedule.setBackgroundColor(_mContext.getResources().getColor(R.color.colorBlueJeans));
         }
 
+        holder.setListener(position, holder._theHiddenBox, holder._theMainBox);
+
     }
 
     private static Date _currentDate() {
@@ -144,6 +146,13 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
             _theMainBox = itemView.findViewById(R.id.main_box);
             _theHiddenBox = itemView.findViewById(R.id.hidden_box);
 
+        }
+
+        public void setListener(int position, ConstraintLayout constraintLayout, ConstraintLayout clickable) {
+            clickable.setOnClickListener(view -> {
+                if (constraintLayout.getVisibility() == View.VISIBLE) constraintLayout.setVisibility(View.GONE);
+                else constraintLayout.setVisibility(View.VISIBLE);
+            });
         }
 
     }
