@@ -53,7 +53,7 @@ public class PaymentActivity extends AppCompatActivity {
 
         if (route_name != null) {
 
-            final String _fare = "PHP "+ bus_fare +".00";
+            final String _fare = "PHP " + bus_fare + ".00";
 
             _routeName.setText(route_name);
             _busNumber.setText("BUS NO. " + bus_number);
@@ -79,7 +79,7 @@ public class PaymentActivity extends AppCompatActivity {
                         final int user_balance = Integer.parseInt(doc.getString("user_balance"));
                         final int _processPayment = user_balance - Integer.parseInt(bus_fare);
 
-                        if (user_balance >= 0) _userBalance.setText("PHP "+ user_balance + ".00");
+                        if (user_balance >= 0) _userBalance.setText("PHP " + user_balance + ".00");
 
                         _onPay.setOnClickListener(v -> {
                             _pd = new ProgressDialog(this);
@@ -129,8 +129,7 @@ public class PaymentActivity extends AppCompatActivity {
                                                                             finish();
                                                                         });
                                                             });
-                                                }
-                                                else {
+                                                } else {
                                                     _pd.dismiss();
                                                     Toast.makeText(this, "Reservation already booked!", Toast.LENGTH_SHORT).show();
                                                     startActivity(new Intent(this, HomeActivity.class));
@@ -138,8 +137,7 @@ public class PaymentActivity extends AppCompatActivity {
                                                 }
                                             }
                                         });
-                            }
-                            else {
+                            } else {
                                 _pd.dismiss();
                                 Toast.makeText(this, "You have insufficient balance!", Toast.LENGTH_SHORT).show();
                             }
