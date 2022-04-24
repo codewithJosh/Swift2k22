@@ -13,12 +13,6 @@ import androidx.core.content.ContextCompat;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -48,7 +42,7 @@ public class TicketActivity extends AppCompatActivity {
         i.putExtra("ticket_id", ticket_id);
         startActivity(i);
         finish();
-        
+
     }
 
     @Override
@@ -83,7 +77,7 @@ public class TicketActivity extends AppCompatActivity {
                 .get()
                 .addOnCompleteListener(task -> {
 
-                    if (task.isSuccessful()){
+                    if (task.isSuccessful()) {
 
                         DocumentSnapshot doc = task.getResult();
                         formatter = new SimpleDateFormat("dd MMMM yyyy h:mm a");
@@ -97,7 +91,7 @@ public class TicketActivity extends AppCompatActivity {
                 .get()
                 .addOnCompleteListener(task -> {
 
-                    if (task.isSuccessful()){
+                    if (task.isSuccessful()) {
 
                         DocumentSnapshot doc = task.getResult();
                         formatter = new SimpleDateFormat("dd MMMM yyyy h:mm a");
@@ -117,13 +111,12 @@ public class TicketActivity extends AppCompatActivity {
             //set bitmap on imageview
             _barcode.setImageBitmap(bitmap);
             // initialize input manager
-            InputMethodManager manager = (InputMethodManager)  getSystemService(
+            InputMethodManager manager = (InputMethodManager) getSystemService(
                     Context.INPUT_METHOD_SERVICE
             );
             // hide soft keyboard
             // manager.hideSoftInputFromWindow(etInput.getApplicationWindowToken(),0);
-        }
-        catch (WriterException e){
+        } catch (WriterException e) {
             e.printStackTrace();
         }
 
