@@ -1,5 +1,6 @@
 package com.codewithjosh.Swift2k22;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -20,6 +21,7 @@ public class HomeActivity extends AppCompatActivity {
 
     Button _onViewScheduleProof;
     RecyclerView _recyclerRoutes;
+    String bus_fare, bus_id, ticket_id;
     FirebaseFirestore firebaseFirestore;
     private RouteAdapter _routeAdapter;
     private List<RouteModel> _routeList;
@@ -32,6 +34,10 @@ public class HomeActivity extends AppCompatActivity {
 
         _onViewScheduleProof = findViewById(R.id.on_view_schedule_proof);
         _recyclerRoutes = findViewById(R.id.recycler_routes);
+
+        bus_fare = getIntent().getStringExtra("bus_fare");
+        bus_id = getIntent().getStringExtra("bus_id");
+        ticket_id = getIntent().getStringExtra("ticket_id");
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
@@ -47,15 +53,31 @@ public class HomeActivity extends AppCompatActivity {
 
         _readRoutes();
 
+        _onViewScheduleProof.setOnClickListener(v -> {
+
+            if (ticket_id != null) {
+
+                Intent i = new Intent(this, TicketActivity.class);
+                i.putExtra("bus_fare", bus_fare);
+                i.putExtra("bus_id", bus_id);
+                i.putExtra("ticket_id", ticket_id);
+                startActivity(i);
+                finish();
+            }
+        });
+
     }
 
     private void _readRoutes() {
+
         firebaseFirestore
                 .collection("Routes")
                 .get()
                 .addOnCompleteListener(task -> {
+
                     _routeList.clear();
                     for (QueryDocumentSnapshot snapshot : task.getResult()) {
+
                         RouteModel _routeModel = new RouteModel(
                                 snapshot.getString("route_id"),
                                 snapshot.getString("route_name")
@@ -66,4 +88,5 @@ public class HomeActivity extends AppCompatActivity {
                 });
 
     }
+
 }
