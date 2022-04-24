@@ -1,8 +1,11 @@
 package com.codewithjosh.Swift2k22;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +13,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PaymentActivity extends AppCompatActivity {
 
@@ -22,6 +28,8 @@ public class PaymentActivity extends AppCompatActivity {
     FirebaseFirestore firebaseFirestore;
 
     DocumentReference userRef;
+
+    ProgressDialog _pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +77,74 @@ public class PaymentActivity extends AppCompatActivity {
                         DocumentSnapshot doc = task.getResult();
 
                         final int user_balance = Integer.parseInt(doc.getString("user_balance"));
+                        final int _processPayment = user_balance - Integer.parseInt(bus_fare);
 
                         if (user_balance >= 0) _userBalance.setText("PHP "+ user_balance + ".00");
+
+                        _onPay.setOnClickListener(v -> {
+                            _pd = new ProgressDialog(this);
+                            _pd.setMessage("Please wait");
+                            _pd.show();
+
+                            if (_processPayment >= 0) {
+
+                                final String _ticketId = firebaseFirestore
+                                        .collection("Tickets")
+                                        .document()
+                                        .getId();
+
+                                Map<String, Object> _ticket = new HashMap<>();
+                                _ticket.put("user_id", user_id);
+                                _ticket.put("bus_id", bus_id);
+                                _ticket.put("ticket", _ticketId);
+
+                                firebaseFirestore
+                                        .collection("Tickets")
+                                        .whereEqualTo("bus_id", bus_id)
+                                        .whereEqualTo("user_id", user_id)
+                                        .get()
+                                        .addOnCompleteListener(_task -> {
+
+                                            if (_task.getResult() != null) {
+
+                                                if (_task.getResult().isEmpty()) {
+
+                                                    firebaseFirestore
+                                                            .collection("Tickets")
+                                                            .document(_ticketId)
+                                                            .set(_ticket)
+                                                            .addOnCompleteListener(__task -> {
+
+                                                                userRef
+                                                                        .update("user_balance", String.valueOf(_processPayment))
+                                                                        .addOnCompleteListener(___task -> {
+
+                                                                            _pd.dismiss();
+                                                                            Toast.makeText(this, "Transaction complete!", Toast.LENGTH_SHORT).show();
+                                                                            Intent i = new Intent(this, TicketActivity.class);
+                                                                            i.putExtra("bus_fare", bus_fare);
+                                                                            i.putExtra("bus_id", bus_id);
+                                                                            i.putExtra("ticket_id", _ticketId);
+                                                                            startActivity(i);
+                                                                            finish();
+                                                                        });
+                                                            });
+                                                }
+                                                else {
+                                                    _pd.dismiss();
+                                                    Toast.makeText(this, "Reservation already booked!", Toast.LENGTH_SHORT).show();
+                                                    startActivity(new Intent(this, HomeActivity.class));
+                                                    finish();
+                                                }
+                                            }
+                                        });
+                            }
+                            else {
+                                _pd.dismiss();
+                                Toast.makeText(this, "You have insufficient balance!", Toast.LENGTH_SHORT).show();
+                            }
+
+                        });
                     }
                 });
 
