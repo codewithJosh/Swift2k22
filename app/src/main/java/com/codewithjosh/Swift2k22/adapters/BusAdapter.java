@@ -1,6 +1,7 @@
 package com.codewithjosh.Swift2k22.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.codewithjosh.Swift2k22.PaymentActivity;
 import com.codewithjosh.Swift2k22.R;
 import com.codewithjosh.Swift2k22.models.BusModel;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -86,6 +88,18 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
         }
 
         holder.setListener(position, holder._theHiddenBox, holder._theMainBox);
+
+        holder._onBookSchedule.setOnClickListener(v -> {
+            if (_getTimeAgo(_bus.getBus_timestamp()).equals("AT THE STATION")
+                    || _getTimeAgo(_bus.getBus_timestamp()).equals("INBOUND")){
+                Intent i = new Intent(_mContext, PaymentActivity.class);
+                i.putExtra("bus_id", _bus.getBus_id());
+                i.putExtra("route_name", route_name);
+                i.putExtra("bus_number", _bus.getBus_number());
+                i.putExtra("bus_fare", _bus.getBus_fare());
+                _mContext.startActivity(i);
+            }
+        });
 
     }
 
