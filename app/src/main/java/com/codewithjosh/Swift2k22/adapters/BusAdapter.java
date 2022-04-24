@@ -30,6 +30,8 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
 
     public Context _mContext;
     public List<BusModel> _busList;
+    public String route_name;
+    FirebaseFirestore firebaseFirestore;
 
     public BusAdapter(Context _mContext, List<BusModel> _busList, String route_name) {
         this._mContext = _mContext;
@@ -37,9 +39,35 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
         this.route_name = route_name;
     }
 
-    public String route_name;
+    private static Date _currentDate() {
 
-    FirebaseFirestore firebaseFirestore;
+        Calendar calendar = Calendar.getInstance();
+        return calendar.getTime();
+
+    }
+
+    public static String _getTimeAgo(Date date) {
+
+        long time = date.getTime();
+        if (time < 1000000000000L) {
+            time *= 1000;
+        }
+
+        long now = _currentDate().getTime();
+        if (time > now || time <= 0) {
+            return "AT THE STATION";
+        }
+
+        final long diff = now - time;
+        if (diff < MINUTE_MILLIS) {
+            return "INBOUND";
+        } else if (diff < 2 * MINUTE_MILLIS || diff < 60 * MINUTE_MILLIS) {
+            return "DEPARTED";
+        } else {
+            return "ARRIVED";
+        }
+
+    }
 
     @NonNull
     @Override
@@ -69,9 +97,9 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
                 .get()
                 .addOnCompleteListener(task -> {
 
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
 
-                        if(task.getResult() != null) {
+                        if (task.getResult() != null) {
 
                             final int _availableSlots = Integer.parseInt(_bus.getBus_slots()) - task.getResult().size();
 
@@ -82,7 +110,7 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
                     }
                 });
 
-        if( position % 2 == 0){
+        if (position % 2 == 0) {
             holder._theMainBox.setBackgroundColor(_mContext.getResources().getColor(R.color.colorBlueJeans));
             holder._onBookSchedule.setBackgroundColor(_mContext.getResources().getColor(R.color.colorBlueJeans));
         }
@@ -91,7 +119,7 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
 
         holder._onBookSchedule.setOnClickListener(v -> {
             if (_getTimeAgo(_bus.getBus_timestamp()).equals("AT THE STATION")
-                    || _getTimeAgo(_bus.getBus_timestamp()).equals("INBOUND")){
+                    || _getTimeAgo(_bus.getBus_timestamp()).equals("INBOUND")) {
                 Intent i = new Intent(_mContext, PaymentActivity.class);
                 i.putExtra("bus_id", _bus.getBus_id());
                 i.putExtra("route_name", route_name);
@@ -100,38 +128,6 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
                 _mContext.startActivity(i);
             }
         });
-
-    }
-
-    private static Date _currentDate() {
-
-        Calendar calendar = Calendar.getInstance();
-        return calendar.getTime();
-
-    }
-
-    public static String _getTimeAgo(Date date) {
-
-        long time = date.getTime();
-        if (time < 1000000000000L) {
-            time *= 1000;
-        }
-
-        long now = _currentDate().getTime();
-        if (time > now || time <= 0) {
-            return "AT THE STATION";
-        }
-
-        final long diff = now - time;
-        if (diff < MINUTE_MILLIS) {
-            return "INBOUND";
-        }
-        else if (diff < 2 * MINUTE_MILLIS || diff < 60 * MINUTE_MILLIS) {
-            return "DEPARTED";
-        }
-        else {
-            return "ARRIVED";
-        }
 
     }
 
@@ -164,7 +160,8 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
 
         public void setListener(int position, ConstraintLayout constraintLayout, ConstraintLayout clickable) {
             clickable.setOnClickListener(view -> {
-                if (constraintLayout.getVisibility() == View.VISIBLE) constraintLayout.setVisibility(View.GONE);
+                if (constraintLayout.getVisibility() == View.VISIBLE)
+                    constraintLayout.setVisibility(View.GONE);
                 else constraintLayout.setVisibility(View.VISIBLE);
             });
         }

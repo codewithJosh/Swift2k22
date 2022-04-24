@@ -1,11 +1,11 @@
 package com.codewithjosh.Swift2k22;
 
+import android.os.Bundle;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Bundle;
-import android.widget.TextView;
 
 import com.codewithjosh.Swift2k22.adapters.BusAdapter;
 import com.codewithjosh.Swift2k22.models.BusModel;
@@ -18,16 +18,13 @@ import java.util.List;
 
 public class ReservationActivity extends AppCompatActivity {
 
-    private BusAdapter _busAdapter;
-    private List<BusModel> _busList;
-
     RecyclerView _recyclerBus;
     TextView _routeName, _routeTimestamp;
-
     String route_id, route_name, route_timestamp;
-
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firebaseFirestore;
+    private BusAdapter _busAdapter;
+    private List<BusModel> _busList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
