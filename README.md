@@ -1,6 +1,19 @@
 # SWIFT 2K22
+Online Reservation/ Ticketing System for Bus Transportation in Lingayen-Dagupan
 
-> _Coming Soon_
+## FEATURES:sparkles:
+- Login and Register
+- Create Reservation (Admin only)
+- Buy Ticket through Swift Wallet
+- Generate Ticket Barcode
+
+## CREDITS🎉
+We would like to give THANKS to the following:
+- Google [Firebase][1]
+- ZXing, Journey [ZXingAndroidEmbedded][2]
+
+Also to:
+- [GraphicSprings][3]! For their awesome [Coach Automotive Bus Logo][4] used as the initial launcher icon on this project.
 
 ## LICENSE:memo:
 
@@ -26,3 +39,7 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
     
+[1]: https://firebase.google.com/
+[2]: https://github.com/journeyapps/zxing-android-embedded
+[3]: https://www.graphicsprings.com
+[4]: https://www.graphicsprings.com/logographics/coach-automotive-bus
