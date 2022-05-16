@@ -1,7 +1,12 @@
 package com.codewithjosh.Swift2k22;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -13,13 +18,18 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseUser firebaseUser;
 
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initSharedPref();
+
         getWindow().setNavigationBarColor(getResources().getColor(R.color.colorVividCerulean));
-        getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorVividCerulean));
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorVividCerulean));
 
         //hide action bar
         if (getSupportActionBar() != null) getSupportActionBar().hide();
@@ -37,18 +47,51 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 } finally {
 
-                    firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                    if (isConnected()) checkCurrentAuthState();
 
-                    if (firebaseUser != null)
-                        startActivity(new Intent(MainActivity.this, HomeActivity.class));
-                    else startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                    finish();
+                    else
+                        runOnUiThread(() -> Toast.makeText(MainActivity.this, "No Internet Connection!", Toast.LENGTH_LONG).show());
 
                 }
+
             }
         };
 
         thread.start();
+
+    }
+
+    private void initSharedPref() {
+
+        sharedPref = getSharedPreferences("user", MODE_PRIVATE);
+        editor = sharedPref.edit();
+
+    }
+
+    private boolean isConnected() {
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnectedOrConnecting();
+
+    }
+
+    private void checkCurrentAuthState() {
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (firebaseUser != null) {
+
+            final String s_user_id = firebaseUser.getUid();
+
+            editor.putString("s_user_id", s_user_id);
+            editor.apply();
+
+            startActivity(new Intent(this, HomeActivity.class));
+        }
+        else startActivity(new Intent(this, LoginActivity.class));
+
+        finish();
 
     }
 
