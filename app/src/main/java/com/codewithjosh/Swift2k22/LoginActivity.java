@@ -17,8 +17,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 public class LoginActivity extends AppCompatActivity {
 
     EditText _username, _password;
-    Button _onLogin;
-    TextView _onSignUp;
+    Button _onLogin, _onSignUp;
 
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firebaseFirestore;
@@ -30,10 +29,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        _username = findViewById(R.id.username);
-        _password = findViewById(R.id.password);
-        _onLogin = findViewById(R.id.on_login);
-        _onSignUp = findViewById(R.id.on_sign_up);
+        _username = findViewById(R.id.et_user_name);
+        _password = findViewById(R.id.et_password);
+        _onLogin = findViewById(R.id.btn_login);
+        _onSignUp = findViewById(R.id.nav_register);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
