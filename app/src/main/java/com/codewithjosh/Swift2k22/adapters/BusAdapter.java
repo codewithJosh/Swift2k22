@@ -101,7 +101,7 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
 
                         if (task.getResult() != null) {
 
-                            final int _availableSlots = Integer.parseInt(_bus.getBus_slots()) - task.getResult().size();
+                            final int _availableSlots = _bus.getBus_slots() - task.getResult().size();
 
                             if (_getTimeAgo(_bus.getBus_timestamp()).equals("AT THE STATION")
                                     || _getTimeAgo(_bus.getBus_timestamp()).equals("INBOUND"))

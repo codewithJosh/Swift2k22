@@ -68,27 +68,34 @@ public class ReservationActivity extends AppCompatActivity {
                     _busList.clear();
                     for (QueryDocumentSnapshot _snapshot : task.getResult()) {
 
+                        final BusModel bus = _snapshot.toObject(BusModel.class);
+                        final String s_bus_id = bus.getBus_id();
+
                         firebaseFirestore
+                                .collection("Buses")
+                                .document(s_bus_id)
                                 .collection("Tickets")
-                                .whereEqualTo("bus_id", _snapshot.getString("bus_id"))
                                 .addSnapshotListener((v, e) -> {
 
-                                    final int _availableSlots = Integer.parseInt(_snapshot.getString("bus_slots")) - v.size();
+                                    if (v != null)
+                                    {
 
-                                    BusModel _busModel = new BusModel(
-                                            _snapshot.getString("route_id"),
-                                            _snapshot.getString("bus_id"),
-                                            _snapshot.getString("bus_number"),
-                                            _snapshot.getString("bus_slots"),
-                                            _snapshot.getDate("bus_timestamp"),
-                                            _snapshot.getString("bus_fare")
-                                    );
+                                        final int i_bus_slots = bus.getBus_slots();
+                                        final int i_current_bus_slots = v.size();
 
-                                    if (_availableSlots != 0) _busList.add(_busModel);
-                                    _busAdapter.notifyDataSetChanged();
+                                        if (i_bus_slots - i_current_bus_slots != 0)
+                                        {
+                                            _busList.add(bus);
+                                        }_busAdapter.notifyDataSetChanged();
+
+                                    }
+
                                 });
+
                     }
+
                 });
 
     }
+
 }
