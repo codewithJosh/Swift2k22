@@ -12,214 +12,256 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/register_header"
+            android:id="@+id/iv_header_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
             android:src="@drawable/header_login"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="15dp"
-            android:orientation="vertical"
             android:padding="15dp"
-
-            android:paddingHorizontal="25dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/register_header"
-            app:layout_constraintVertical_bias="0.18">
+            app:layout_constraintTop_toBottomOf="@id/iv_header_register">
 
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/tv_create"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="Create an account"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="25sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
-            <!-- Username -->
-
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint_user_name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/create_input_decoration_round"
-                android:orientation="horizontal">
-
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_create">
 
                 <ImageView
+                    android:id="@+id/iv_user_name"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginVertical="10dp"
                     android:layout_marginStart="17dp"
-                    android:layout_marginEnd="3dp"
+                    android:adjustViewBounds="true"
                     android:background="@drawable/ic_user_name"
-                    android:backgroundTint="?attr/colorSecondary" />
+                    android:backgroundTint="?attr/colorSecondary"
+                    android:scaleType="fitXY"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/username"
-                    android:layout_width="match_parent"
+                    android:id="@+id/et_user_name"
+                    android:layout_width="0dp"
                     android:layout_height="50dp"
-                    android:background="@null"
-                    android:digits="abcdefghijklmnopqrstuvwxyz1234567890"
+                    android:layout_marginStart="3dp"
+                    android:autofillHints="no"
+                    android:background="@android:color/transparent"
+                    android:digits="@string/digits_1"
                     android:hint="@string/hint_user_name"
                     android:imeOptions="actionNext"
+                    android:includeFontPadding="false"
                     android:inputType="text"
                     android:maxLength="16"
                     android:paddingHorizontal="10dp"
                     android:singleLine="true"
                     android:textColor="?attr/colorOnSecondary"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/iv_user_name"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Email -->
-
-
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint_email"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/create_input_decoration_round"
-                android:orientation="horizontal">
-
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/constraint_user_name">
 
                 <ImageView
+                    android:id="@+id/iv_email"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:layout_marginVertical="10dp"
                     android:layout_marginStart="15dp"
-                    android:layout_marginEnd="1dp"
+                    android:adjustViewBounds="true"
                     android:background="@drawable/ic_email"
-                    android:backgroundTint="?attr/colorSecondary" />
+                    android:backgroundTint="?attr/colorSecondary"
+                    android:scaleType="fitXY"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/email"
-                    android:layout_width="match_parent"
+                    android:id="@+id/et_email"
+                    android:layout_width="0dp"
                     android:layout_height="50dp"
-                    android:background="@null"
-                    android:digits="abcdefghijklmnopqrstuvwxyz1234567890@."
+                    android:layout_marginStart="1dp"
+                    android:autofillHints="no"
+                    android:background="@android:color/transparent"
+                    android:digits="@string/digits_3"
                     android:hint="@string/hint_email"
                     android:imeOptions="actionNext"
+                    android:includeFontPadding="false"
                     android:inputType="textEmailAddress"
                     android:maxLength="40"
                     android:paddingHorizontal="10dp"
                     android:singleLine="true"
                     android:textColor="?attr/colorOnSecondary"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/iv_email"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-            <!-- Password -->
-
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint_password"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/create_input_decoration_round"
-                android:orientation="horizontal">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/constraint_email">
 
                 <ImageView
+                    android:id="@+id/iv_password"
                     android:layout_width="25dp"
                     android:layout_height="30dp"
-                    android:layout_marginVertical="10dp"
                     android:layout_marginStart="20dp"
-                    android:layout_marginEnd="5dp"
                     android:adjustViewBounds="true"
                     android:background="@drawable/ic_password"
                     android:backgroundTint="?attr/colorSecondary"
-                    android:scaleType="fitXY" />
+                    android:scaleType="fitXY"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
+                    android:id="@+id/et_password"
+                    android:layout_width="0dp"
                     android:layout_height="50dp"
-                    android:background="@null"
-                    android:digits="abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*-=_+:;,.?"
+                    android:layout_marginStart="5dp"
+                    android:autofillHints="no"
+                    android:background="@android:color/transparent"
+                    android:digits="@string/digits_2"
                     android:hint="@string/hint_password"
                     android:imeOptions="actionNext"
+                    android:includeFontPadding="false"
                     android:inputType="textPassword"
                     android:maxLength="32"
                     android:paddingHorizontal="10dp"
                     android:singleLine="true"
                     android:textColor="?attr/colorOnSecondary"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/iv_password"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Password -->
-
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint_re_password"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/create_input_decoration_round"
-                android:orientation="horizontal">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/constraint_password">
 
                 <ImageView
+                    android:id="@+id/iv_re_password"
                     android:layout_width="25dp"
                     android:layout_height="30dp"
-                    android:layout_marginVertical="10dp"
                     android:layout_marginStart="20dp"
-                    android:layout_marginEnd="5dp"
                     android:adjustViewBounds="true"
                     android:background="@drawable/ic_password"
                     android:backgroundTint="?attr/colorSecondary"
-                    android:scaleType="fitXY" />
+                    android:scaleType="fitXY"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/rePassword"
-                    android:layout_width="match_parent"
+                    android:id="@+id/et_re_password"
+                    android:layout_width="0dp"
                     android:layout_height="50dp"
-                    android:background="@null"
-                    android:digits="abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*-=_+:;,.?"
+                    android:layout_marginStart="5dp"
+                    android:autofillHints="no"
+                    android:background="@android:color/transparent"
+                    android:digits="@string/digits_2"
                     android:hint="@string/hint_re_password"
                     android:imeOptions="actionDone"
+                    android:includeFontPadding="false"
                     android:inputType="textPassword"
                     android:maxLength="32"
                     android:paddingHorizontal="10dp"
                     android:singleLine="true"
                     android:textColor="?attr/colorOnSecondary"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/iv_re_password"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <Button
-                android:id="@+id/on_register"
+                android:id="@+id/btn_register"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_marginTop="20dp"
-
                 android:background="@drawable/create_linear_button_round"
+                android:includeFontPadding="false"
                 android:text="@string/text_sign_up"
                 android:textAllCaps="true"
                 android:textColor="?attr/colorOnPrimary"
-                android:textSize="14sp" />
-
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/constraint_re_password"/>
 
             <TextView
-                android:id="@+id/on_sign_in"
-                android:layout_width="match_parent"
+                android:id="@+id/nav_login"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:gravity="center"
                 android:text="Already have an account? Sign In"
                 android:textColor="@color/colorBlack_FF"
                 android:textSize="6pt"
-                android:textStyle="italic" />
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_register" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </ScrollView>
