@@ -32,7 +32,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        _onViewScheduleProof = findViewById(R.id.on_view_schedule_proof);
+        _onViewScheduleProof = findViewById(R.id.nav_ticket);
         _recyclerRoutes = findViewById(R.id.recycler_routes);
 
         bus_fare = getIntent().getStringExtra("bus_fare");
