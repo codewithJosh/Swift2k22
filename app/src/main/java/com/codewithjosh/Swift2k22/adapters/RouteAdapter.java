@@ -158,23 +158,22 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView _routeName, _busDateTimestamp, _busTimestamp, _theSubTitle, _busFare;
+        public TextView _routeName, _busDateTimestamp, _busTimestamp, _busFare;
         public ConstraintLayout _theMainBox, _theHiddenBox;
         public Button _onBookSchedule, _onViewMoreSchedule;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            _routeName = itemView.findViewById(R.id.route_name);
-            _busDateTimestamp = itemView.findViewById(R.id.bus_date_timestamp);
-            _busTimestamp = itemView.findViewById(R.id.bus_timestamp);
-            _busFare = itemView.findViewById(R.id.bus_fare);
-            _onBookSchedule = itemView.findViewById(R.id.on_book_schedule);
-            _onViewMoreSchedule = itemView.findViewById(R.id.on_view_more_schedule);
+            _routeName = itemView.findViewById(R.id.tv_route_name);
+            _busDateTimestamp = itemView.findViewById(R.id.tv_bus_timestamp);
+            _busTimestamp = itemView.findViewById(R.id.tv_bus_date_timestamp);
+            _busFare = itemView.findViewById(R.id.tv_bus_fare);
+            _onBookSchedule = itemView.findViewById(R.id.nav_payment);
+            _onViewMoreSchedule = itemView.findViewById(R.id.nav_reservation);
 
-            _theSubTitle = itemView.findViewById(R.id.subtitle_destination);
-            _theMainBox = itemView.findViewById(R.id.main_box);
-            _theHiddenBox = itemView.findViewById(R.id.hidden_box);
+            _theMainBox = itemView.findViewById(R.id.constraint_main_box);
+            _theHiddenBox = itemView.findViewById(R.id.constraint_hidden_box);
 
         }
 

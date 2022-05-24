@@ -138,7 +138,7 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView _busNumber, _busSlots, _busTimestamp, _busFare, _busStatus, _theSubTitle;
+        public TextView _busNumber, _busSlots, _busTimestamp, _busFare, _busStatus;
         public ConstraintLayout _theMainBox, _theHiddenBox;
         public Button _onBookSchedule;
 
@@ -152,7 +152,6 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
             _busStatus = itemView.findViewById(R.id.bus_status);
             _onBookSchedule = itemView.findViewById(R.id.on_book_schedule);
 
-            _theSubTitle = itemView.findViewById(R.id.subtitle_destination);
             _theMainBox = itemView.findViewById(R.id.main_box);
             _theHiddenBox = itemView.findViewById(R.id.hidden_box);
 
