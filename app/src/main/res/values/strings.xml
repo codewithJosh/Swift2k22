@@ -6,4 +6,7 @@
     <string name="text_sign_up">sign up</string>
     <string name="hint_email">Email</string>
     <string name="hint_re_password">Re-Enter Password</string>
+    <string name="digits_1">abcdefghijklmnopqrstuvwxyz1234567890</string>
+    <string name="digits_2">abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*-=_+:;,.?</string>
+    <string name="digits_3">abcdefghijklmnopqrstuvwxyz1234567890@.</string>
 </resources>

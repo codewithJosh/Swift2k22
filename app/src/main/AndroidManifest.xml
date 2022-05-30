@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Swift">
         <activity
+            android:name=".ViewTicketActivity"
+            android:exported="false" />
+        <activity
             android:name=".TicketActivity"
             android:exported="false" />
         <activity

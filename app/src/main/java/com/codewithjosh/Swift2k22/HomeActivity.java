@@ -1,8 +1,12 @@
 package com.codewithjosh.Swift2k22;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,79 +17,105 @@ import com.codewithjosh.Swift2k22.models.BusModel;
 import com.codewithjosh.Swift2k22.models.RouteModel;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
-    Button _onViewScheduleProof;
-    RecyclerView _recyclerRoutes;
-    String bus_fare, bus_id, ticket_id;
+    Button nav_ticket;
+    RecyclerView recycler_routes;
     FirebaseFirestore firebaseFirestore;
-    private RouteAdapter _routeAdapter;
-    private List<RouteModel> _routeList;
-    private List<BusModel> _busList;
+    private RouteAdapter routeAdapter;
+    private List<BusModel> busList;
+    private List<RouteModel> routeList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        _onViewScheduleProof = findViewById(R.id.on_view_schedule_proof);
-        _recyclerRoutes = findViewById(R.id.recycler_routes);
-
-        bus_fare = getIntent().getStringExtra("bus_fare");
-        bus_id = getIntent().getStringExtra("bus_id");
-        ticket_id = getIntent().getStringExtra("ticket_id");
-
-        firebaseFirestore = FirebaseFirestore.getInstance();
-
-        _recyclerRoutes.setHasFixedSize(true);
-        LinearLayoutManager _linearLayoutManager = new LinearLayoutManager(this);
-        _linearLayoutManager.setReverseLayout(true);
-        _linearLayoutManager.setStackFromEnd(true);
-        _recyclerRoutes.setLayoutManager(_linearLayoutManager);
-        _routeList = new ArrayList<>();
-        _busList = new ArrayList<>();
-        _routeAdapter = new RouteAdapter(this, _routeList, _busList);
-        _recyclerRoutes.setAdapter(_routeAdapter);
-
-        _readRoutes();
-
-        _onViewScheduleProof.setOnClickListener(v -> {
-
-            if (ticket_id != null) {
-
-                Intent i = new Intent(this, TicketActivity.class);
-                i.putExtra("bus_fare", bus_fare);
-                i.putExtra("bus_id", bus_id);
-                i.putExtra("ticket_id", ticket_id);
-                startActivity(i);
-                finish();
-            }
-        });
+        initViews();
+        initInstances();
+        loadRoutes();
+        buildButtons();
 
     }
 
-    private void _readRoutes() {
+    private void initViews() {
+
+        nav_ticket = findViewById(R.id.nav_ticket);
+        recycler_routes = findViewById(R.id.recycler_routes);
+
+        recycler_routes.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        recycler_routes.setLayoutManager(linearLayoutManager);
+        routeList = new ArrayList<>();
+        busList = new ArrayList<>();
+        routeAdapter = new RouteAdapter(this, routeList, busList);
+        recycler_routes.setAdapter(routeAdapter);
+
+    }
+
+    private void initInstances() {
+
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
+    }
+
+    private void loadRoutes() {
 
         firebaseFirestore
                 .collection("Routes")
-                .get()
-                .addOnCompleteListener(task -> {
+                .addSnapshotListener((value, error) ->
+                {
 
-                    _routeList.clear();
-                    for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                    if (value != null) {
 
-                        RouteModel _routeModel = new RouteModel(
-                                snapshot.getString("route_id"),
-                                snapshot.getString("route_name")
-                        );
-                        _routeList.add(_routeModel);
+                        if (!isConnected())
+                            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+
+                        else onLoadRoutes(value);
+
                     }
-                    _routeAdapter.notifyDataSetChanged();
+
                 });
+
+    }
+
+    private boolean isConnected() {
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnectedOrConnecting();
+
+    }
+
+    private void onLoadRoutes(final QuerySnapshot value) {
+
+        routeList.clear();
+        for (QueryDocumentSnapshot snapshot : value) {
+
+            final RouteModel route = snapshot.toObject(RouteModel.class);
+
+            routeList.add(route);
+
+        }
+        routeAdapter.notifyDataSetChanged();
+
+    }
+
+    private void buildButtons() {
+
+        nav_ticket.setOnClickListener(v ->
+        {
+            startActivity(new Intent(this, TicketActivity.class));
+            finish();
+        });
 
     }
 
