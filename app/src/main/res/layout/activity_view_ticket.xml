@@ -11,173 +11,145 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="20dp"
-        android:background="@drawable/ic_receipt"
-        tools:layout_editor_absoluteX="20dp"
-        tools:layout_editor_absoluteY="20dp">
+        android:background="@drawable/ic_receipt">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/main_title"
-                android:layout_width="match_parent"
+                android:id="@+id/tv_payment"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:text="Payment Received"
-                android:textAlignment="center"
                 android:textColor="@color/colorDavysGrey"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/barcode"
-                android:layout_width="match_parent"
+                android:id="@+id/iv_barcode"
+                android:layout_width="wrap_content"
                 android:layout_height="100dp"
                 android:layout_marginHorizontal="5dp"
                 android:layout_marginTop="15dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"
-                app:layout_constraintTop_toBottomOf="@id/main_title" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_payment" />
 
             <TextView
-                android:id="@+id/bus_fare"
-                android:layout_width="match_parent"
+                android:id="@+id/tv_bus_fare"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/open_sans_bold"
-                android:textAlignment="center"
                 android:textSize="25sp"
                 android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/barcode" />
-
-
-            <!-- PRICE and REFERENCE NO. -->
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_barcode" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/payment_box"
+                android:id="@+id/constraint_payment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:background="?attr/colorOnPrimary"
-                android:paddingBottom="15dp"
-                app:layout_constraintTop_toBottomOf="@+id/bus_fare">
+                android:padding="15dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_bus_fare">
 
                 <View
-                    android:id="@+id/separator_top"
+                    android:id="@+id/v"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-
-                    android:layout_marginHorizontal="15dp"
-                    android:layout_marginTop="15dp"
                     android:background="@color/colorArgent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/payment_box" />
+                    app:layout_constraintTop_toTopOf="@id/constraint_payment" />
 
                 <TextView
-                    android:id="@+id/amount_due_title"
+                    android:id="@+id/tv_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
-                    android:paddingHorizontal="10dp"
                     android:text="Amount Due"
                     android:textColor="@color/colorDavysGrey"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/separator_top" />
-
+                    app:layout_constraintTop_toBottomOf="@id/v" />
 
                 <TextView
-                    android:id="@+id/total_amt"
+                    android:id="@+id/tv_total_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:layout_marginEnd="15dp"
-                    android:paddingHorizontal="10dp"
+                    android:layout_marginEnd="10dp"
                     android:textColor="@color/colorDavysGrey"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/separator_top" />
+                    app:layout_constraintTop_toBottomOf="@id/v" />
 
                 <TextView
-                    android:id="@+id/method_title"
+                    android:id="@+id/tv_method"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
-                    android:paddingHorizontal="10dp"
                     android:text="Payment Method"
                     android:textColor="@color/colorDavysGrey"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/amount_due_title" />
-
+                    app:layout_constraintTop_toBottomOf="@id/tv_amount" />
 
                 <TextView
-                    android:id="@+id/subTitle_method"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:layout_marginEnd="15dp"
-                    android:paddingHorizontal="10dp"
+                    android:layout_marginEnd="10dp"
                     android:text="Swift Wallet"
                     android:textColor="@color/colorArgent"
-
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/total_amt" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_total_amount" />
 
                 <View
-                    android:id="@+id/separator"
+                    android:id="@+id/v_2"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-
-                    android:layout_marginHorizontal="15dp"
                     android:layout_marginTop="15dp"
                     android:background="@color/colorArgent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/subTitle_method" />
-
+                    app:layout_constraintTop_toBottomOf="@id/tv_method" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:id="@+id/ref"
-                android:layout_width="match_parent"
+                android:id="@+id/tv_ticket_id"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
                 android:textColor="@color/colorDavysGrey"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/payment_box" />
+                app:layout_constraintTop_toBottomOf="@id/constraint_payment" />
 
             <TextView
-                android:id="@+id/bus_timestamp"
-                android:layout_width="match_parent"
+                android:id="@+id/tv_bus_timestamp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
                 android:textColor="@color/colorArgent"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ref" />
+                app:layout_constraintTop_toBottomOf="@id/tv_ticket_id" />
 
             <ImageView
-                android:id="@+id/header_img"
+                android:id="@+id/iv_background"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_marginTop="50dp"
@@ -185,27 +157,23 @@
                 android:foreground="@drawable/create_linear_foreground"
                 android:scaleType="centerCrop"
                 android:src="@drawable/img_background"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/bus_timestamp" />
+                app:layout_constraintTop_toBottomOf="@id/tv_bus_timestamp" />
 
             <TextView
-                android:id="@+id/header_text"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/open_sans_bold"
-                android:paddingHorizontal="15dp"
-                android:singleLine="false"
                 android:text="Thank you for your support!"
-                android:textAlignment="center"
                 android:textColor="?attr/colorOnPrimary"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/header_img"
-                app:layout_constraintTop_toTopOf="@+id/header_img" />
-
+                app:layout_constraintBottom_toBottomOf="@id/iv_background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/iv_background" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

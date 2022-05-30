@@ -50,11 +50,11 @@ public class ViewTicketActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_ticket);
 
-        _barcode = findViewById(R.id.barcode);
-        _busFare = findViewById(R.id.bus_fare);
-        _totalAmt = findViewById(R.id.total_amt);
-        _ref = findViewById(R.id.ref);
-        _busTimestamp = findViewById(R.id.bus_timestamp);
+        _barcode = findViewById(R.id.iv_barcode);
+        _busFare = findViewById(R.id.tv_bus_fare);
+        _totalAmt = findViewById(R.id.tv_total_amount);
+        _ref = findViewById(R.id.tv_ticket_id);
+        _busTimestamp = findViewById(R.id.tv_bus_timestamp);
 
         bus_fare = getIntent().getStringExtra("bus_fare");
         bus_id = getIntent().getStringExtra("bus_id");
