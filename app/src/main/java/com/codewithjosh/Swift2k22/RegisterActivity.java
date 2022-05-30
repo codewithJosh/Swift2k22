@@ -21,9 +21,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class RegisterActivity extends AppCompatActivity {
 
     Button btn_register;
@@ -41,8 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
     ProgressDialog pd;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
@@ -53,8 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void initViews()
-    {
+    private void initViews() {
 
         et_user_name = findViewById(R.id.et_user_name);
         et_email = findViewById(R.id.et_email);
@@ -65,16 +60,14 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void initInstances()
-    {
+    private void initInstances() {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
     }
 
-    private void buildButtons()
-    {
+    private void buildButtons() {
 
         nav_login.setOnClickListener(v ->
         {
@@ -95,8 +88,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void getString()
-    {
+    private void getString() {
 
         s_user_name = et_user_name.getText().toString().toLowerCase();
         s_email = et_email.getText().toString().toLowerCase();
@@ -105,8 +97,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private boolean validate(final View v)
-    {
+    private boolean validate(final View v) {
 
         pd = new ProgressDialog(this);
         pd.setMessage("Signing up");
@@ -143,8 +134,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private boolean isConnected()
-    {
+    private boolean isConnected() {
 
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -152,8 +142,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void checkUserName()
-    {
+    private void checkUserName() {
 
         firebaseFirestore
                 .collection("Users")
@@ -162,29 +151,23 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots ->
                 {
 
-                    if (queryDocumentSnapshots != null)
-                    {
+                    if (queryDocumentSnapshots != null) {
 
-                        if (!queryDocumentSnapshots.isEmpty())
-                        {
+                        if (!queryDocumentSnapshots.isEmpty()) {
 
                             pd.dismiss();
                             Toast.makeText(this, "Username is Already Taken!", Toast.LENGTH_SHORT).show();
 
-                        }
-
-                        else onRegister();
+                        } else onRegister();
 
                     }
-
 
 
                 });
 
     }
 
-    private void onRegister()
-    {
+    private void onRegister() {
 
         firebaseAuth
                 .createUserWithEmailAndPassword(s_email, s_password)

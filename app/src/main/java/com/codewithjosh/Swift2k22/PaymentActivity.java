@@ -18,8 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 
-public class PaymentActivity extends AppCompatActivity
-{
+public class PaymentActivity extends AppCompatActivity {
 
     Button btn_payment;
     TextView tv_route_name;
@@ -40,8 +39,7 @@ public class PaymentActivity extends AppCompatActivity
     SharedPreferences.Editor editor;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
@@ -59,8 +57,7 @@ public class PaymentActivity extends AppCompatActivity
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null)
-                    {
+                    if (value != null) {
 
                         final UserModel user = value.toObject(UserModel.class);
 
@@ -77,8 +74,7 @@ public class PaymentActivity extends AppCompatActivity
                             pd.setMessage("Please wait");
                             pd.show();
 
-                            if (i_future_user_balance >= 0)
-                            {
+                            if (i_future_user_balance >= 0) {
 
                                 final String s_ticket_id = firebaseFirestore
                                         .collection("Tickets")
@@ -130,9 +126,7 @@ public class PaymentActivity extends AppCompatActivity
 
                                         });
 
-                            }
-                            else
-                            {
+                            } else {
 
                                 pd.dismiss();
                                 Toast.makeText(this, "You have insufficient balance!", Toast.LENGTH_SHORT).show();
@@ -148,8 +142,7 @@ public class PaymentActivity extends AppCompatActivity
 
     }
 
-    private void initViews()
-    {
+    private void initViews() {
 
         btn_payment = findViewById(R.id.btn_payment);
         tv_route_name = findViewById(R.id.tv_route_name);
@@ -160,23 +153,20 @@ public class PaymentActivity extends AppCompatActivity
 
     }
 
-    private void initInstances()
-    {
+    private void initInstances() {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
     }
 
-    private void initSharedPref()
-    {
+    private void initSharedPref() {
 
         sharedPref = getSharedPreferences("user", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 
     }
 
-    private void load()
-    {
+    private void load() {
 
         s_user_id = sharedPref.getString("s_user_id", String.valueOf(Context.MODE_PRIVATE));
         s_bus_id = sharedPref.getString("s_bus_id", String.valueOf(Context.MODE_PRIVATE));

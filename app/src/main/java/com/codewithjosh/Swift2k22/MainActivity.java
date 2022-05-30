@@ -88,8 +88,7 @@ public class MainActivity extends AppCompatActivity {
             editor.apply();
 
             startActivity(new Intent(this, HomeActivity.class));
-        }
-        else startActivity(new Intent(this, LoginActivity.class));
+        } else startActivity(new Intent(this, LoginActivity.class));
 
         finish();
 

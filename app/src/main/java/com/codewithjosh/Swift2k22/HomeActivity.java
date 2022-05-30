@@ -22,19 +22,17 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity
-{
+public class HomeActivity extends AppCompatActivity {
 
-    private RouteAdapter routeAdapter;
-    private List<BusModel> busList;
-    private List<RouteModel> routeList;
     Button nav_ticket;
     RecyclerView recycler_routes;
     FirebaseFirestore firebaseFirestore;
+    private RouteAdapter routeAdapter;
+    private List<BusModel> busList;
+    private List<RouteModel> routeList;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
@@ -46,8 +44,7 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
-    private void initViews()
-    {
+    private void initViews() {
 
         nav_ticket = findViewById(R.id.nav_ticket);
         recycler_routes = findViewById(R.id.recycler_routes);
@@ -64,25 +61,23 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
-    private void initInstances()
-    {
+    private void initInstances() {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
     }
 
-    private void loadRoutes()
-    {
+    private void loadRoutes() {
 
         firebaseFirestore
                 .collection("Routes")
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null)
-                    {
+                    if (value != null) {
 
-                        if (!isConnected()) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                        if (!isConnected())
+                            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
                         else onLoadRoutes(value);
 
@@ -92,8 +87,7 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
-    private boolean isConnected()
-    {
+    private boolean isConnected() {
 
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -101,12 +95,10 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
-    private void onLoadRoutes(final QuerySnapshot value)
-    {
+    private void onLoadRoutes(final QuerySnapshot value) {
 
         routeList.clear();
-        for (QueryDocumentSnapshot snapshot : value)
-        {
+        for (QueryDocumentSnapshot snapshot : value) {
 
             final RouteModel route = snapshot.toObject(RouteModel.class);
 
@@ -117,8 +109,7 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
-    private void buildButtons()
-    {
+    private void buildButtons() {
 
         nav_ticket.setOnClickListener(v ->
         {

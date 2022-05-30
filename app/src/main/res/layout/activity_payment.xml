@@ -119,7 +119,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/constraint_wallet"/>
+        app:layout_constraintTop_toBottomOf="@id/constraint_wallet" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_payment"
@@ -214,8 +214,8 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="50dp"
         android:layout_marginTop="15dp"
-        android:textAlignment="center"
         android:text="Please review to ensure that the details are correct before you proceed"
+        android:textAlignment="center"
         android:textColor="@color/colorArgent"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"

@@ -38,8 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     SharedPreferences.Editor editor;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -51,8 +50,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void initViews()
-    {
+    private void initViews() {
 
         et_user_name = findViewById(R.id.et_user_name);
         et_password = findViewById(R.id.et_password);
@@ -61,24 +59,21 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void initInstances()
-    {
+    private void initInstances() {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
     }
 
-    private void initSharedPref()
-    {
+    private void initSharedPref() {
 
         sharedPref = getSharedPreferences("user", MODE_PRIVATE);
         editor = sharedPref.edit();
 
     }
 
-    private void buildButtons()
-    {
+    private void buildButtons() {
 
         nav_register.setOnClickListener(v ->
         {
@@ -99,16 +94,14 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void getString()
-    {
+    private void getString() {
 
         s_user_name = et_user_name.getText().toString().toLowerCase();
         s_password = et_password.getText().toString();
 
     }
 
-    private boolean validate(final View v)
-    {
+    private boolean validate(final View v) {
 
         pd = new ProgressDialog(this);
         pd.setMessage("Logging in");
@@ -141,8 +134,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void checkUserName()
-    {
+    private void checkUserName() {
 
         firebaseFirestore
                 .collection("Users")
@@ -151,21 +143,18 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots ->
                 {
 
-                    if (queryDocumentSnapshots != null)
-                    {
+                    if (queryDocumentSnapshots != null) {
 
                         if (!queryDocumentSnapshots.isEmpty())
 
-                            for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots)
-                            {
+                            for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
 
                                 final UserModel user = snapshot.toObject(UserModel.class);
                                 onLogin(user);
 
                             }
 
-                        else
-                        {
+                        else {
 
                             pd.dismiss();
                             Toast.makeText(this, "User Doesn't Exist!", Toast.LENGTH_SHORT).show();
@@ -178,8 +167,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void onLogin(final UserModel user)
-    {
+    private void onLogin(final UserModel user) {
 
         final String s_email = user.getUser_email();
 
@@ -225,8 +213,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void _onLogin(String _username, String _password)
-    {
+    private void _onLogin(String _username, String _password) {
 
         firebaseFirestore
                 .collection("Users")
@@ -259,17 +246,17 @@ public class LoginActivity extends AppCompatActivity {
 
                                         }).addOnFailureListener(e -> {
 
-                                    if (e.toString().contains("The password is invalid or the user does not have a password")) {
-                                        pd.dismiss();
-                                        Toast.makeText(LoginActivity.this, "Incorrect Password!", Toast.LENGTH_SHORT).show();
-                                    } else if (e.toString().contains("A network error (such as timeout, interrupted connection or unreachable host) has occurred")) {
-                                        pd.dismiss();
-                                        Toast.makeText(LoginActivity.this, "Internet Connection Lost!", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        pd.dismiss();
-                                        Toast.makeText(LoginActivity.this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                                            if (e.toString().contains("The password is invalid or the user does not have a password")) {
+                                                pd.dismiss();
+                                                Toast.makeText(LoginActivity.this, "Incorrect Password!", Toast.LENGTH_SHORT).show();
+                                            } else if (e.toString().contains("A network error (such as timeout, interrupted connection or unreachable host) has occurred")) {
+                                                pd.dismiss();
+                                                Toast.makeText(LoginActivity.this, "Internet Connection Lost!", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                pd.dismiss();
+                                                Toast.makeText(LoginActivity.this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                             }
                         }
 

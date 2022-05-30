@@ -42,7 +42,7 @@
                 android:textSize="25sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraint_user_name"
@@ -245,7 +245,7 @@
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/constraint_re_password"/>
+                app:layout_constraintTop_toBottomOf="@id/constraint_re_password" />
 
             <TextView
                 android:id="@+id/nav_login"

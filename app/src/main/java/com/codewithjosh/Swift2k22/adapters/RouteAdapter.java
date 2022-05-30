@@ -21,8 +21,6 @@ import com.codewithjosh.Swift2k22.R;
 import com.codewithjosh.Swift2k22.ReservationActivity;
 import com.codewithjosh.Swift2k22.models.BusModel;
 import com.codewithjosh.Swift2k22.models.RouteModel;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -31,11 +29,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
-public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder>
-{
+public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> {
 
     public Context context;
     public List<BusModel> busList;
@@ -46,8 +42,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder>
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
 
-    public RouteAdapter(Context context, List<RouteModel> routeList, List<BusModel> busList)
-    {
+    public RouteAdapter(Context context, List<RouteModel> routeList, List<BusModel> busList) {
 
         this.context = context;
         this.routeList = routeList;
@@ -55,10 +50,16 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder>
 
     }
 
+    private static Date currentDate() {
+
+        Calendar calendar = Calendar.getInstance();
+        return calendar.getTime();
+
+    }
+
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
-    {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(context).inflate(R.layout.item_route, parent, false);
         return new ViewHolder(v);
@@ -66,8 +67,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder>
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position)
-    {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         final RouteModel route = routeList.get(position);
 
@@ -97,12 +97,10 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder>
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null)
-                    {
+                    if (value != null) {
 
                         busList.clear();
-                        for (QueryDocumentSnapshot snapshot : value)
-                        {
+                        for (QueryDocumentSnapshot snapshot : value) {
 
                             final BusModel bus = snapshot.toObject(BusModel.class);
                             final Date date = bus.getBus_timestamp();
@@ -111,8 +109,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder>
                             if (_time < 1000000000000L) _time *= 1000;
 
                             long now = currentDate().getTime();
-                            if (_time > now || _time <= 0)
-                            {
+                            if (_time > now || _time <= 0) {
 
                                 busList.add(bus);
                                 Collections.sort(busList, BusModel.comparator);
@@ -121,8 +118,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder>
 
                         }
 
-                        if (busList.size() != 0)
-                        {
+                        if (busList.size() != 0) {
 
                             final BusModel bus = busList.get(0);
 
@@ -134,8 +130,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder>
                             final String s_future_bus_timestamp = "dd MMMM yyyy h:mm a";
 
                             dateFormat = new SimpleDateFormat(s_bus_date_timestamp);
-                            if (date_bus_timestamp != null)
-                            {
+                            if (date_bus_timestamp != null) {
 
                                 tv_bus_date_timestamp.setText(dateFormat.format(date_bus_timestamp));
                                 tv_bus_date_timestamp.setTag("");
@@ -143,17 +138,18 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder>
                             }
 
                             dateFormat = new SimpleDateFormat(s_bus_timestamp);
-                            if (date_bus_timestamp != null) tv_bus_timestamp.setText(dateFormat.format(date_bus_timestamp));
+                            if (date_bus_timestamp != null)
+                                tv_bus_timestamp.setText(dateFormat.format(date_bus_timestamp));
 
                             tv_bus_fare.setText(s_bus_fare);
 
                             constraint_main_box.setOnClickListener(v ->
                             {
 
-                                if (tv_bus_date_timestamp.getTag().equals(""))
-                                {
+                                if (tv_bus_date_timestamp.getTag().equals("")) {
 
-                                    if (constraint_hidden_box.getVisibility() == View.GONE) constraint_hidden_box.setVisibility(View.VISIBLE);
+                                    if (constraint_hidden_box.getVisibility() == View.GONE)
+                                        constraint_hidden_box.setVisibility(View.VISIBLE);
 
                                     else constraint_hidden_box.setVisibility(View.GONE);
 
@@ -166,8 +162,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder>
 
                                 final String s_bus_id = bus.getBus_id();
 
-                                if (isConnected())
-                                {
+                                if (isConnected()) {
 
                                     firebaseFirestore
                                             .collection("Tickets")
@@ -177,17 +172,14 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder>
                                             .addOnSuccessListener(queryDocumentSnapshots ->
                                             {
 
-                                                if (queryDocumentSnapshots != null)
-                                                {
+                                                if (queryDocumentSnapshots != null) {
 
-                                                    if (queryDocumentSnapshots.isEmpty())
-                                                    {
+                                                    if (queryDocumentSnapshots.isEmpty()) {
 
                                                         final int i_bus_slots = bus.getBus_slots();
                                                         final int i_current_bus_slots = queryDocumentSnapshots.size();
 
-                                                        if (i_bus_slots - i_current_bus_slots != 0)
-                                                        {
+                                                        if (i_bus_slots - i_current_bus_slots != 0) {
 
                                                             final String s_bus_number = "BUS NO. " + bus.getBus_number();
                                                             dateFormat = new SimpleDateFormat(s_future_bus_timestamp);
@@ -202,26 +194,25 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder>
 
                                                             context.startActivity(new Intent(context, PaymentActivity.class));
 
-                                                        }
-                                                        else Toast.makeText(context, "Reservation is already full!", Toast.LENGTH_SHORT).show();
+                                                        } else
+                                                            Toast.makeText(context, "Reservation is already full!", Toast.LENGTH_SHORT).show();
 
-                                                    }
-                                                    else Toast.makeText(context, "Reservation already booked!", Toast.LENGTH_SHORT).show();
+                                                    } else
+                                                        Toast.makeText(context, "Reservation already booked!", Toast.LENGTH_SHORT).show();
 
                                                 }
 
                                             });
 
-                                }
-                                else Toast.makeText(context, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                                } else
+                                    Toast.makeText(context, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
                             });
 
                             nav_reservation.setOnClickListener(v ->
                             {
 
-                                if (isConnected())
-                                {
+                                if (isConnected()) {
 
                                     editor.putString("s_route_id", s_route_id);
                                     editor.putString("s_route_name", s_route_name);
@@ -230,19 +221,18 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder>
 
                                     context.startActivity(new Intent(context, ReservationActivity.class));
 
-                                }
-                                else Toast.makeText(context, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                                } else
+                                    Toast.makeText(context, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
                             });
 
-                        }
-                        else
-                        {
+                        } else {
 
                             tv_bus_date_timestamp.setText("N/A");
                             tv_bus_date_timestamp.setTag("unavailable");
                             tv_bus_timestamp.setText("N/A");
-                            if (constraint_hidden_box.getVisibility() == View.VISIBLE) constraint_hidden_box.setVisibility(View.GONE);
+                            if (constraint_hidden_box.getVisibility() == View.VISIBLE)
+                                constraint_hidden_box.setVisibility(View.GONE);
 
                         }
 
@@ -250,42 +240,31 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder>
 
                 });
 
-        if (position % 2 == 0) constraint_main_box.setBackgroundColor(context.getResources().getColor(R.color.colorBlueJeans));
+        if (position % 2 == 0)
+            constraint_main_box.setBackgroundColor(context.getResources().getColor(R.color.colorBlueJeans));
 
     }
 
-    private void load()
-    {
+    private void load() {
 
         s_user_id = sharedPref.getString("s_user_id", String.valueOf(Context.MODE_PRIVATE));
 
     }
 
-    private void initInstances()
-    {
+    private void initInstances() {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
     }
 
-    private void initSharedPref()
-    {
+    private void initSharedPref() {
 
         sharedPref = context.getSharedPreferences("user", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 
     }
 
-    private static Date currentDate()
-    {
-
-        Calendar calendar = Calendar.getInstance();
-        return calendar.getTime();
-
-    }
-
-    private boolean isConnected()
-    {
+    private boolean isConnected() {
 
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -294,15 +273,13 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder>
     }
 
     @Override
-    public int getItemCount()
-    {
+    public int getItemCount() {
 
         return routeList.size();
 
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder
-    {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         Button nav_payment;
         Button nav_reservation;
@@ -313,8 +290,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder>
         TextView tv_bus_date_timestamp;
         TextView tv_bus_fare;
 
-        public ViewHolder(@NonNull View itemView)
-        {
+        public ViewHolder(@NonNull View itemView) {
 
             super(itemView);
 

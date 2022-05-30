@@ -27,8 +27,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder>
-{
+public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
 
     private static final int SECOND_MILLIS = 1000;
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
@@ -42,18 +41,39 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder>
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
 
-    public BusAdapter(Context context, List<BusModel> busList)
-    {
+    public BusAdapter(Context context, List<BusModel> busList) {
 
         this.context = context;
         this.busList = busList;
 
     }
 
+    public static String getTimeAgo(final Date date) {
+
+        long time = date.getTime();
+        if (time < 1000000000000L) time *= 1000;
+
+        final long now = currentDate().getTime();
+        if (time > now || time <= 0) return "AT THE STATION";
+
+        final long diff = now - time;
+
+        if (diff < MINUTE_MILLIS) return "INBOUND";
+
+        else return "DEPARTED";
+
+    }
+
+    private static Date currentDate() {
+
+        Calendar calendar = Calendar.getInstance();
+        return calendar.getTime();
+
+    }
+
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
-    {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(context).inflate(R.layout.item_bus, parent, false);
         return new ViewHolder(v);
@@ -61,8 +81,7 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder>
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position)
-    {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         final BusModel bus = busList.get(position);
 
@@ -104,25 +123,23 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder>
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null)
-                    {
+                    if (value != null) {
 
                         final int i_current_bus_slots = value.size();
                         final int i_available_bus_slots = i_bus_slots - i_current_bus_slots;
 
-                        if (i_available_bus_slots != 0)
-                        {
+                        if (i_available_bus_slots != 0) {
 
                             final String s_bus_slots = i_available_bus_slots + " slots left";
 
-                            if (!getTimeAgo(date_bus_timestamp).equals("DEPARTED")) tv_bus_slots.setText(s_bus_slots);
+                            if (!getTimeAgo(date_bus_timestamp).equals("DEPARTED"))
+                                tv_bus_slots.setText(s_bus_slots);
 
-                        }
-                        else
-                        {
+                        } else {
 
                             tv_bus_slots.setText("");
-                            if (constraint_hidden_box.getVisibility() == View.VISIBLE) constraint_hidden_box.setVisibility(View.GONE);
+                            if (constraint_hidden_box.getVisibility() == View.VISIBLE)
+                                constraint_hidden_box.setVisibility(View.GONE);
 
                         }
 
@@ -133,10 +150,10 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder>
         constraint_main_box.setOnClickListener(v ->
         {
 
-            if (!getTimeAgo(date_bus_timestamp).equals("DEPARTED") && !tv_bus_slots.getText().toString().equals(""))
-            {
+            if (!getTimeAgo(date_bus_timestamp).equals("DEPARTED") && !tv_bus_slots.getText().toString().equals("")) {
 
-                if (constraint_hidden_box.getVisibility() == View.GONE) constraint_hidden_box.setVisibility(View.VISIBLE);
+                if (constraint_hidden_box.getVisibility() == View.GONE)
+                    constraint_hidden_box.setVisibility(View.VISIBLE);
 
                 else constraint_hidden_box.setVisibility(View.GONE);
 
@@ -147,8 +164,7 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder>
         nav_payment.setOnClickListener(v ->
         {
 
-            if (isConnected())
-            {
+            if (isConnected()) {
 
                 firebaseFirestore
                         .collection("Tickets")
@@ -157,11 +173,9 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder>
                         .addSnapshotListener((value, error) ->
                         {
 
-                            if (value != null)
-                            {
+                            if (value != null) {
 
-                                if (value.isEmpty())
-                                {
+                                if (value.isEmpty()) {
 
                                     dateFormat = new SimpleDateFormat(s_future_bus_timestamp);
                                     final String _s_future_bus_timestamp = dateFormat.format(date_bus_timestamp);
@@ -175,72 +189,43 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder>
 
                                     context.startActivity(new Intent(context, PaymentActivity.class));
 
-                                }
-                                else Toast.makeText(context, "Reservation already booked!", Toast.LENGTH_SHORT).show();
+                                } else
+                                    Toast.makeText(context, "Reservation already booked!", Toast.LENGTH_SHORT).show();
 
                             }
 
                         });
 
-            }
-            else Toast.makeText(context, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+            } else Toast.makeText(context, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
         });
 
-        if (position % 2 == 0) constraint_main_box.setBackgroundColor(context.getResources().getColor(R.color.colorBlueJeans));
+        if (position % 2 == 0)
+            constraint_main_box.setBackgroundColor(context.getResources().getColor(R.color.colorBlueJeans));
 
     }
 
-    public static String getTimeAgo(final Date date)
-    {
-
-        long time = date.getTime();
-        if (time < 1000000000000L) time *= 1000;
-
-        final long now = currentDate().getTime();
-        if (time > now || time <= 0) return "AT THE STATION";
-
-        final long diff = now - time;
-
-        if (diff < MINUTE_MILLIS) return "INBOUND";
-
-        else return "DEPARTED";
-
-    }
-
-    private static Date currentDate()
-    {
-
-        Calendar calendar = Calendar.getInstance();
-        return calendar.getTime();
-
-    }
-
-    private void initInstances()
-    {
+    private void initInstances() {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
     }
 
-    private void initSharedPref()
-    {
+    private void initSharedPref() {
 
         sharedPref = context.getSharedPreferences("user", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 
     }
 
-    private void load()
-    {
+    private void load() {
 
         s_user_id = sharedPref.getString("s_user_id", String.valueOf(Context.MODE_PRIVATE));
         s_route_name = sharedPref.getString("s_route_name", String.valueOf(Context.MODE_PRIVATE));
 
     }
 
-    private boolean isConnected()
-    {
+    private boolean isConnected() {
 
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -249,15 +234,13 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder>
     }
 
     @Override
-    public int getItemCount()
-    {
+    public int getItemCount() {
 
         return busList.size();
 
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder
-    {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         Button nav_payment;
         ConstraintLayout constraint_main_box;
@@ -268,8 +251,7 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder>
         TextView tv_bus_fare;
         TextView tv_bus_status;
 
-        public ViewHolder(@NonNull View itemView)
-        {
+        public ViewHolder(@NonNull View itemView) {
 
             super(itemView);
 

@@ -24,13 +24,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class ReservationActivity extends AppCompatActivity
-{
+public class ReservationActivity extends AppCompatActivity {
 
     private static final int SECOND_MILLIS = 1000;
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
-    private BusAdapter busAdapter;
-    private List<BusModel> busList;
     RecyclerView recycler_bus;
     TextView tv_route_name;
     TextView tv_bus_date_timestamp;
@@ -39,10 +36,18 @@ public class ReservationActivity extends AppCompatActivity
     String s_bus_date_timestamp;
     FirebaseFirestore firebaseFirestore;
     SharedPreferences sharedPref;
+    private BusAdapter busAdapter;
+    private List<BusModel> busList;
+
+    private static Date currentDate() {
+
+        Calendar calendar = Calendar.getInstance();
+        return calendar.getTime();
+
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reservation);
 
@@ -54,8 +59,7 @@ public class ReservationActivity extends AppCompatActivity
 
     }
 
-    private void initViews()
-    {
+    private void initViews() {
 
         recycler_bus = findViewById(R.id.recycler_bus);
         tv_route_name = findViewById(R.id.tv_route_name);
@@ -70,22 +74,19 @@ public class ReservationActivity extends AppCompatActivity
 
     }
 
-    private void initInstances()
-    {
+    private void initInstances() {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
     }
 
-    private void initSharedPref()
-    {
+    private void initSharedPref() {
 
         sharedPref = getSharedPreferences("user", Context.MODE_PRIVATE);
 
     }
 
-    private void load()
-    {
+    private void load() {
 
         s_route_id = sharedPref.getString("s_route_id", String.valueOf(Context.MODE_PRIVATE));
         s_route_name = sharedPref.getString("s_route_name", String.valueOf(Context.MODE_PRIVATE));
@@ -96,8 +97,7 @@ public class ReservationActivity extends AppCompatActivity
 
     }
 
-    private void loadBuses()
-    {
+    private void loadBuses() {
 
         firebaseFirestore
                 .collection("Buses")
@@ -105,10 +105,10 @@ public class ReservationActivity extends AppCompatActivity
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null)
-                    {
+                    if (value != null) {
 
-                        if (!isConnected()) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                        if (!isConnected())
+                            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
                         else onLoadBuses(value);
 
@@ -118,8 +118,7 @@ public class ReservationActivity extends AppCompatActivity
 
     }
 
-    private boolean isConnected()
-    {
+    private boolean isConnected() {
 
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -127,12 +126,10 @@ public class ReservationActivity extends AppCompatActivity
 
     }
 
-    private void onLoadBuses(final QuerySnapshot value)
-    {
+    private void onLoadBuses(final QuerySnapshot value) {
 
         busList.clear();
-        for (QueryDocumentSnapshot snapshot : value)
-        {
+        for (QueryDocumentSnapshot snapshot : value) {
 
             final BusModel bus = snapshot.toObject(BusModel.class);
             final Date date = bus.getBus_timestamp();
@@ -144,8 +141,7 @@ public class ReservationActivity extends AppCompatActivity
 
             final long diff = now - time;
 
-            if (diff < 30 * MINUTE_MILLIS)
-            {
+            if (diff < 30 * MINUTE_MILLIS) {
 
                 busList.add(bus);
                 Collections.sort(busList, BusModel.comparator);
@@ -154,14 +150,6 @@ public class ReservationActivity extends AppCompatActivity
             busAdapter.notifyDataSetChanged();
 
         }
-
-    }
-
-    private static Date currentDate()
-    {
-
-        Calendar calendar = Calendar.getInstance();
-        return calendar.getTime();
 
     }
 

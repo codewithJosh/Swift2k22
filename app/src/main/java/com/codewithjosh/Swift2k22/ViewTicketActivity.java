@@ -4,14 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -19,11 +17,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
-public class ViewTicketActivity extends AppCompatActivity
-{
+public class ViewTicketActivity extends AppCompatActivity {
 
     ImageView iv_barcode;
     TextView tv_bus_fare;
@@ -37,8 +31,7 @@ public class ViewTicketActivity extends AppCompatActivity
     SharedPreferences sharedPref;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_ticket);
@@ -50,8 +43,7 @@ public class ViewTicketActivity extends AppCompatActivity
 
     }
 
-    private void initViews()
-    {
+    private void initViews() {
 
         iv_barcode = findViewById(R.id.iv_barcode);
         tv_bus_fare = findViewById(R.id.tv_bus_fare);
@@ -64,22 +56,19 @@ public class ViewTicketActivity extends AppCompatActivity
 
     }
 
-    private void initInstances()
-    {
+    private void initInstances() {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
     }
 
-    private void initSharedPref()
-    {
+    private void initSharedPref() {
 
         sharedPref = getSharedPreferences("user", Context.MODE_PRIVATE);
 
     }
 
-    private void load()
-    {
+    private void load() {
 
         s_ticket_id = sharedPref.getString("s_ticket_id", String.valueOf(Context.MODE_PRIVATE));
         s_future_bus_timestamp = sharedPref.getString("s_future_bus_timestamp", String.valueOf(Context.MODE_PRIVATE));
@@ -95,17 +84,14 @@ public class ViewTicketActivity extends AppCompatActivity
 
         MultiFormatWriter writer = new MultiFormatWriter();
 
-        try
-        {
+        try {
 
             BitMatrix matrix = writer.encode(s_ticket_id, BarcodeFormat.CODE_128, 400, 100);
             BarcodeEncoder encoder = new BarcodeEncoder();
             Bitmap bitmap = encoder.createBitmap(matrix);
             iv_barcode.setImageBitmap(bitmap);
 
-        }
-        catch (WriterException e)
-        {
+        } catch (WriterException e) {
 
             e.printStackTrace();
 
