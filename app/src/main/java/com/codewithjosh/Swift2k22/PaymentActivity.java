@@ -36,12 +36,12 @@ public class PaymentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
 
-        _onPay = findViewById(R.id.on_pay);
-        _routeName = findViewById(R.id.route_name);
-        _busNumber = findViewById(R.id.bus_number);
-        _userBalance = findViewById(R.id.user_balance);
-        _busFare = findViewById(R.id.bus_fare);
-        _totalAmt = findViewById(R.id.total_amt);
+        _onPay = findViewById(R.id.btn_payment);
+        _routeName = findViewById(R.id.tv_route_name);
+        _busNumber = findViewById(R.id.tv_bus_number);
+        _userBalance = findViewById(R.id.tv_user_balance);
+        _busFare = findViewById(R.id.tv_bus_fare);
+        _totalAmt = findViewById(R.id.tv_total_amount);
 
         bus_id = getIntent().getStringExtra("bus_id");
         route_name = getIntent().getStringExtra("route_name");
