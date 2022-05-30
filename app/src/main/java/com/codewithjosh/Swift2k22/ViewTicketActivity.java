@@ -1,7 +1,7 @@
 package com.codewithjosh.Swift2k22;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.inputmethod.InputMethodManager;
@@ -22,102 +22,93 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-public class ViewTicketActivity extends AppCompatActivity {
+public class ViewTicketActivity extends AppCompatActivity
+{
 
-    ImageView _barcode;
-    TextView _busFare, _totalAmt, _ref, _busTimestamp;
-
-    String bus_fare, bus_id, ticket_id;
-
+    ImageView iv_barcode;
+    TextView tv_bus_fare;
+    TextView tv_total_amount;
+    TextView tv_ticket_id;
+    TextView tv_bus_timestamp;
+    int i_bus_fare;
+    String s_ticket_id;
+    String s_future_bus_timestamp;
     FirebaseFirestore firebaseFirestore;
-
-    DateFormat formatter;
-
-    @Override
-    public void onBackPressed() {
-
-        Intent i = new Intent(this, HomeActivity.class);
-        i.putExtra("bus_fare", bus_fare);
-        i.putExtra("bus_id", bus_id);
-        i.putExtra("ticket_id", ticket_id);
-        startActivity(i);
-        finish();
-
-    }
+    SharedPreferences sharedPref;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_ticket);
 
-        _barcode = findViewById(R.id.iv_barcode);
-        _busFare = findViewById(R.id.tv_bus_fare);
-        _totalAmt = findViewById(R.id.tv_total_amount);
-        _ref = findViewById(R.id.tv_ticket_id);
-        _busTimestamp = findViewById(R.id.tv_bus_timestamp);
+        initViews();
+        initInstances();
+        initSharedPref();
+        load();
 
-        bus_fare = getIntent().getStringExtra("bus_fare");
-        bus_id = getIntent().getStringExtra("bus_id");
-        ticket_id = getIntent().getStringExtra("ticket_id");
+    }
 
-        firebaseFirestore = FirebaseFirestore.getInstance();
+    private void initViews()
+    {
+
+        iv_barcode = findViewById(R.id.iv_barcode);
+        tv_bus_fare = findViewById(R.id.tv_bus_fare);
+        tv_total_amount = findViewById(R.id.tv_total_amount);
+        tv_ticket_id = findViewById(R.id.tv_ticket_id);
+        tv_bus_timestamp = findViewById(R.id.tv_bus_timestamp);
 
         getWindow().setNavigationBarColor(getResources().getColor(R.color.colorBlueJeans));
-        getWindow().setStatusBarColor(ContextCompat.getColor(ViewTicketActivity.this, R.color.colorBlueJeans));
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorBlueJeans));
 
-        _busFare.setText("PHP " + bus_fare + ".00");
-        _totalAmt.setText("PHP " + bus_fare + ".00");
-        _ref.setText("Ref No: " + ticket_id.toUpperCase());
+    }
+
+    private void initInstances()
+    {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-        firebaseFirestore
-                .collection("Buses")
-                .document(bus_id)
-                .get()
-                .addOnCompleteListener(task -> {
+    }
 
-                    if (task.isSuccessful()) {
+    private void initSharedPref()
+    {
 
-                        DocumentSnapshot doc = task.getResult();
-                        formatter = new SimpleDateFormat("dd MMMM yyyy h:mm a");
-                        _busTimestamp.setText(formatter.format(doc.getDate("bus_timestamp")));
-                    }
-                });
+        sharedPref = getSharedPreferences("user", Context.MODE_PRIVATE);
 
-        firebaseFirestore
-                .collection("Buses")
-                .document(bus_id)
-                .get()
-                .addOnCompleteListener(task -> {
+    }
 
-                    if (task.isSuccessful()) {
+    private void load()
+    {
 
-                        DocumentSnapshot doc = task.getResult();
-                        formatter = new SimpleDateFormat("dd MMMM yyyy h:mm a");
-                        _busTimestamp.setText(formatter.format(doc.getDate("bus_timestamp")));
-                    }
-                });
+        s_ticket_id = sharedPref.getString("s_ticket_id", String.valueOf(Context.MODE_PRIVATE));
+        s_future_bus_timestamp = sharedPref.getString("s_future_bus_timestamp", String.valueOf(Context.MODE_PRIVATE));
+        i_bus_fare = sharedPref.getInt("i_bus_fare", Context.MODE_PRIVATE);
+
+        final String s_bus_fare = "PHP " + i_bus_fare + ".00";
+        final String _s_ticket_id = "Ref No: " + s_ticket_id.toUpperCase();
+
+        tv_bus_fare.setText(s_bus_fare);
+        tv_total_amount.setText(s_bus_fare);
+        tv_ticket_id.setText(_s_ticket_id);
+        tv_bus_timestamp.setText(s_future_bus_timestamp);
 
         MultiFormatWriter writer = new MultiFormatWriter();
 
-        try {
-            // Initialize bit matrix
-            BitMatrix matrix = writer.encode(ticket_id, BarcodeFormat.CODE_128, 400, 100);
-            //initialize barcode encoder
+        try
+        {
+
+            BitMatrix matrix = writer.encode(s_ticket_id, BarcodeFormat.CODE_128, 400, 100);
             BarcodeEncoder encoder = new BarcodeEncoder();
-            //Initialize Bitmap
             Bitmap bitmap = encoder.createBitmap(matrix);
-            //set bitmap on imageview
-            _barcode.setImageBitmap(bitmap);
-            // initialize input manager
-            InputMethodManager manager = (InputMethodManager) getSystemService(
-                    Context.INPUT_METHOD_SERVICE
-            );
-            // hide soft keyboard
-            // manager.hideSoftInputFromWindow(etInput.getApplicationWindowToken(),0);
-        } catch (WriterException e) {
+            iv_barcode.setImageBitmap(bitmap);
+
+        }
+        catch (WriterException e)
+        {
+
             e.printStackTrace();
+
         }
 
     }
