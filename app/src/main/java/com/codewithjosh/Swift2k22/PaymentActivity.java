@@ -11,11 +11,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.codewithjosh.Swift2k22.models.BusModel;
 import com.codewithjosh.Swift2k22.models.TicketModel;
 import com.codewithjosh.Swift2k22.models.UserModel;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Date;
 import java.util.HashMap;
 
 public class PaymentActivity extends AppCompatActivity {
@@ -26,6 +28,7 @@ public class PaymentActivity extends AppCompatActivity {
     TextView tv_user_balance;
     TextView tv_bus_fare;
     TextView tv_total_amount;
+    Date date_bus_timestamp;
     String s_user_id;
     String s_bus_id;
     String s_route_name;
@@ -83,6 +86,8 @@ public class PaymentActivity extends AppCompatActivity {
 
                                 final TicketModel ticket = new TicketModel(
                                         s_bus_id,
+                                        date_bus_timestamp,
+                                        s_route_name,
                                         s_ticket_id,
                                         s_user_id
                                 );
@@ -182,6 +187,23 @@ public class PaymentActivity extends AppCompatActivity {
         tv_bus_fare.setText(s_bus_fare);
         tv_total_amount.setText(s_bus_fare);
         btn_payment.setText(_s_bus_fare);
+
+        firebaseFirestore
+                .collection("Buses")
+                .document(s_bus_id)
+                .get()
+                .addOnSuccessListener(documentSnapshot ->
+                {
+
+                    if (documentSnapshot != null) {
+
+                        final BusModel bus = documentSnapshot.toObject(BusModel.class);
+
+                        if (bus != null) date_bus_timestamp = bus.getBus_timestamp();
+
+                    }
+
+                });
 
     }
 
