@@ -195,8 +195,7 @@ public class PaymentActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentSnapshot ->
                 {
 
-                    if (documentSnapshot != null)
-                    {
+                    if (documentSnapshot != null) {
 
                         final BusModel bus = documentSnapshot.toObject(BusModel.class);
 

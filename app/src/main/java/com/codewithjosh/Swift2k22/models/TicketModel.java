@@ -3,8 +3,7 @@ package com.codewithjosh.Swift2k22.models;
 import java.util.Comparator;
 import java.util.Date;
 
-public class TicketModel
-{
+public class TicketModel {
 
     public static Comparator<TicketModel> comparator = (bM1, bM2) -> bM1.getBus_timestamp().compareTo(bM2.getBus_timestamp());
     private String bus_id;
@@ -13,13 +12,11 @@ public class TicketModel
     private String ticket_id;
     private String user_id;
 
-    public TicketModel()
-    {
+    public TicketModel() {
 
     }
 
-    public TicketModel(String bus_id, Date bus_timestamp, String route_name, String ticket_id, String user_id)
-    {
+    public TicketModel(String bus_id, Date bus_timestamp, String route_name, String ticket_id, String user_id) {
 
         this.bus_id = bus_id;
         this.bus_timestamp = bus_timestamp;
@@ -29,36 +26,31 @@ public class TicketModel
 
     }
 
-    public String getBus_id()
-    {
+    public String getBus_id() {
 
         return bus_id;
 
     }
 
-    public Date getBus_timestamp()
-    {
+    public Date getBus_timestamp() {
 
         return bus_timestamp;
 
     }
 
-    public String getRoute_name()
-    {
+    public String getRoute_name() {
 
         return route_name;
 
     }
 
-    public String getTicket_id()
-    {
+    public String getTicket_id() {
 
         return ticket_id;
 
     }
 
-    public String getUser_id()
-    {
+    public String getUser_id() {
 
         return user_id;
 

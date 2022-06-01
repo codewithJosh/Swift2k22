@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.codewithjosh.Swift2k22.adapters.TicketAdapter;
-import com.codewithjosh.Swift2k22.models.BusModel;
 import com.codewithjosh.Swift2k22.models.TicketModel;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -24,8 +23,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class TicketActivity extends AppCompatActivity
-{
+public class TicketActivity extends AppCompatActivity {
 
     private static final int SECOND_MILLIS = 1000;
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
@@ -36,9 +34,15 @@ public class TicketActivity extends AppCompatActivity
     private TicketAdapter ticketAdapter;
     private List<TicketModel> ticketList;
 
+    private static Date currentDate() {
+
+        Calendar calendar = Calendar.getInstance();
+        return calendar.getTime();
+
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ticket);
@@ -51,22 +55,19 @@ public class TicketActivity extends AppCompatActivity
 
     }
 
-    private void initSharedPref()
-    {
+    private void initSharedPref() {
 
         sharedPref = getSharedPreferences("user", Context.MODE_PRIVATE);
 
     }
 
-    private void load()
-    {
+    private void load() {
 
         s_user_id = sharedPref.getString("s_user_id", String.valueOf(Context.MODE_PRIVATE));
 
     }
 
-    private void initViews()
-    {
+    private void initViews() {
 
         recycler_ticket = findViewById(R.id.recycler_ticket);
 
@@ -79,15 +80,13 @@ public class TicketActivity extends AppCompatActivity
 
     }
 
-    private void initInstances()
-    {
+    private void initInstances() {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
     }
 
-    private void loadTickets()
-    {
+    private void loadTickets() {
 
         firebaseFirestore
                 .collection("Tickets")
@@ -108,8 +107,7 @@ public class TicketActivity extends AppCompatActivity
 
     }
 
-    private boolean isConnected()
-    {
+    private boolean isConnected() {
 
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -117,12 +115,10 @@ public class TicketActivity extends AppCompatActivity
 
     }
 
-    private void onLoadTickets(final QuerySnapshot value)
-    {
+    private void onLoadTickets(final QuerySnapshot value) {
 
         ticketList.clear();
-        for (QueryDocumentSnapshot snapshot : value)
-        {
+        for (QueryDocumentSnapshot snapshot : value) {
 
             final TicketModel ticket = snapshot.toObject(TicketModel.class);
             final Date date_bus_timestamp = ticket.getBus_timestamp();
@@ -134,8 +130,7 @@ public class TicketActivity extends AppCompatActivity
 
             final long diff = now - time;
 
-            if (diff < 30 * MINUTE_MILLIS)
-            {
+            if (diff < 30 * MINUTE_MILLIS) {
 
                 ticketList.add(ticket);
                 Collections.sort(ticketList, TicketModel.comparator);
@@ -144,14 +139,6 @@ public class TicketActivity extends AppCompatActivity
 
         }
         ticketAdapter.notifyDataSetChanged();
-
-    }
-
-    private static Date currentDate()
-    {
-
-        Calendar calendar = Calendar.getInstance();
-        return calendar.getTime();
 
     }
 

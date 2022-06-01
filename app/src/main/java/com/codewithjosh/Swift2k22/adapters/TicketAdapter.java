@@ -19,13 +19,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder>
-{
+public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder> {
     public Context context;
     public List<TicketModel> ticketList;
     FirebaseFirestore firebaseFirestore;
@@ -33,8 +30,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
 
-    public TicketAdapter(Context context, List<TicketModel> ticketList)
-    {
+    public TicketAdapter(Context context, List<TicketModel> ticketList) {
 
         this.context = context;
         this.ticketList = ticketList;
@@ -43,8 +39,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
-    {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(context).inflate(R.layout.item_ticket, parent, false);
         return new ViewHolder(v);
@@ -52,8 +47,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position)
-    {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         final TicketModel ticket = ticketList.get(position);
 
@@ -78,10 +72,12 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
         tv_route_name.setText(s_route_name);
 
         dateFormat = new SimpleDateFormat(s_bus_timestamp);
-        if (date_bus_timestamp != null) tv_bus_timestamp.setText(dateFormat.format(date_bus_timestamp));
+        if (date_bus_timestamp != null)
+            tv_bus_timestamp.setText(dateFormat.format(date_bus_timestamp));
 
         dateFormat = new SimpleDateFormat(s_bus_date_timestamp);
-        if (date_bus_timestamp != null) tv_bus_date_timestamp.setText(dateFormat.format(date_bus_timestamp));
+        if (date_bus_timestamp != null)
+            tv_bus_date_timestamp.setText(dateFormat.format(date_bus_timestamp));
 
         firebaseFirestore
                 .collection("Buses")
@@ -89,8 +85,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null)
-                    {
+                    if (value != null) {
 
                         final BusModel bus = value.toObject(BusModel.class);
 
@@ -120,15 +115,13 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
 
     }
 
-    private void initInstances()
-    {
+    private void initInstances() {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
     }
 
-    private void initSharedPref()
-    {
+    private void initSharedPref() {
 
         sharedPref = context.getSharedPreferences("user", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
@@ -136,23 +129,20 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
     }
 
     @Override
-    public int getItemCount()
-    {
+    public int getItemCount() {
 
         return ticketList.size();
 
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder
-    {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_route_name;
         TextView tv_bus_number;
         TextView tv_bus_timestamp;
         TextView tv_bus_date_timestamp;
 
-        public ViewHolder(@NonNull View itemView)
-        {
+        public ViewHolder(@NonNull View itemView) {
 
             super(itemView);
 
