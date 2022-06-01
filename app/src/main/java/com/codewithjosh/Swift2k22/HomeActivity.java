@@ -111,11 +111,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void buildButtons() {
 
-        nav_ticket.setOnClickListener(v ->
-        {
-            startActivity(new Intent(this, TicketActivity.class));
-            finish();
-        });
+        nav_ticket.setOnClickListener(v -> startActivity(new Intent(this, TicketActivity.class)));
 
     }
 
