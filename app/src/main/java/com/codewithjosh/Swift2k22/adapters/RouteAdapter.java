@@ -19,8 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.codewithjosh.Swift2k22.PaymentActivity;
 import com.codewithjosh.Swift2k22.R;
 import com.codewithjosh.Swift2k22.ReservationActivity;
+import com.codewithjosh.Swift2k22.ViewTicketActivity;
 import com.codewithjosh.Swift2k22.models.BusModel;
 import com.codewithjosh.Swift2k22.models.RouteModel;
+import com.codewithjosh.Swift2k22.models.TicketModel;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -197,8 +199,27 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
                                                         } else
                                                             Toast.makeText(context, "Reservation is already full!", Toast.LENGTH_SHORT).show();
 
-                                                    } else
-                                                        Toast.makeText(context, "Reservation already booked!", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    else
+                                                    {
+
+                                                        for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots)
+                                                        {
+                                                            final TicketModel ticket = snapshot.toObject(TicketModel.class);
+                                                            final String s_ticket_id = ticket.getTicket_id();
+
+                                                            dateFormat = new SimpleDateFormat(s_future_bus_timestamp);
+                                                            final String _s_future_bus_timestamp = dateFormat.format(date_bus_timestamp);
+
+                                                            editor.putString("s_ticket_id", s_ticket_id);
+                                                            editor.putString("s_future_bus_timestamp", _s_future_bus_timestamp);
+                                                            editor.putInt("i_bus_fare", i_bus_fare);
+                                                            editor.apply();
+
+                                                            context.startActivity(new Intent(context, ViewTicketActivity.class));
+                                                        }
+
+                                                    }
 
                                                 }
 
