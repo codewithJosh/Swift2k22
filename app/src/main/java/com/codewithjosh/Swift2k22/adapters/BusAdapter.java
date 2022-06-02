@@ -18,8 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.codewithjosh.Swift2k22.PaymentActivity;
 import com.codewithjosh.Swift2k22.R;
+import com.codewithjosh.Swift2k22.ViewTicketActivity;
 import com.codewithjosh.Swift2k22.models.BusModel;
+import com.codewithjosh.Swift2k22.models.TicketModel;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -99,7 +102,7 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
         final String s_bus_id = bus.getBus_id();
         final int i_bus_fare = bus.getBus_fare();
         final String s_bus_fare = "PHP " + i_bus_fare + ".00";
-        final String s_bus_number = "BUS NO. " + bus.getBus_number();
+        final String s_bus_number = bus.getBus_number();
         final int i_bus_slots = bus.getBus_slots();
         final Date date_bus_timestamp = bus.getBus_timestamp();
         final String s_bus_timestamp = "h:mm a";
@@ -170,12 +173,13 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
                         .collection("Tickets")
                         .whereEqualTo("user_id", s_user_id)
                         .whereEqualTo("bus_id", s_bus_id)
-                        .addSnapshotListener((value, error) ->
+                        .get()
+                        .addOnSuccessListener(queryDocumentSnapshots ->
                         {
 
-                            if (value != null) {
+                            if (queryDocumentSnapshots != null) {
 
-                                if (value.isEmpty()) {
+                                if (queryDocumentSnapshots.isEmpty()) {
 
                                     dateFormat = new SimpleDateFormat(s_future_bus_timestamp);
                                     final String _s_future_bus_timestamp = dateFormat.format(date_bus_timestamp);
@@ -189,8 +193,24 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
 
                                     context.startActivity(new Intent(context, PaymentActivity.class));
 
-                                } else
-                                    Toast.makeText(context, "Reservation already booked!", Toast.LENGTH_SHORT).show();
+                                } else {
+
+                                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                                        final TicketModel ticket = snapshot.toObject(TicketModel.class);
+                                        final String s_ticket_id = ticket.getTicket_id();
+
+                                        dateFormat = new SimpleDateFormat(s_future_bus_timestamp);
+                                        final String _s_future_bus_timestamp = dateFormat.format(date_bus_timestamp);
+
+                                        editor.putString("s_ticket_id", s_ticket_id);
+                                        editor.putString("s_future_bus_timestamp", _s_future_bus_timestamp);
+                                        editor.putInt("i_bus_fare", i_bus_fare);
+                                        editor.apply();
+
+                                        context.startActivity(new Intent(context, ViewTicketActivity.class));
+                                    }
+
+                                }
 
                             }
 
