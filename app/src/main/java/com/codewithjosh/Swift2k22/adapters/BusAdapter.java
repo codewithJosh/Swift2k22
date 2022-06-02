@@ -102,7 +102,7 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
         final String s_bus_id = bus.getBus_id();
         final int i_bus_fare = bus.getBus_fare();
         final String s_bus_fare = "PHP " + i_bus_fare + ".00";
-        final String s_bus_number = "BUS NO. " + bus.getBus_number();
+        final String s_bus_number = bus.getBus_number();
         final int i_bus_slots = bus.getBus_slots();
         final Date date_bus_timestamp = bus.getBus_timestamp();
         final String s_bus_timestamp = "h:mm a";
