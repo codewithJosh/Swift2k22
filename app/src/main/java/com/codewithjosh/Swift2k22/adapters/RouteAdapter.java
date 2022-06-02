@@ -183,7 +183,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
 
                                                         if (i_bus_slots - i_current_bus_slots != 0) {
 
-                                                            final String s_bus_number = "BUS NO. " + bus.getBus_number();
+                                                            final String s_bus_number = bus.getBus_number();
                                                             dateFormat = new SimpleDateFormat(s_future_bus_timestamp);
                                                             final String _s_future_bus_timestamp = dateFormat.format(date_bus_timestamp);
 
