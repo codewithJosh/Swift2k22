@@ -193,12 +193,9 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
 
                                     context.startActivity(new Intent(context, PaymentActivity.class));
 
-                                }
-                                else
-                                {
+                                } else {
 
-                                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots)
-                                    {
+                                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
                                         final TicketModel ticket = snapshot.toObject(TicketModel.class);
                                         final String s_ticket_id = ticket.getTicket_id();
 
