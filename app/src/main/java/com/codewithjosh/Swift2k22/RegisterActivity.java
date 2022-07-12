@@ -23,18 +23,20 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    Button btn_register;
-    EditText et_user_name, et_email, et_password, et_re_password;
-    TextView nav_login;
-
-    String s_user_name, s_email, s_password, s_re_password;
-
+    Button btnRegister;
+    EditText etUserName;
+    EditText etEmail;
+    EditText etPassword;
+    EditText etRePassword;
+    TextView navLogin;
+    String userName;
+    String email;
+    String password;
+    String rePassword;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firebaseFirestore;
     FirebaseUser firebaseUser;
-
     DocumentReference documentRef;
-
     ProgressDialog pd;
 
     @Override
@@ -51,12 +53,12 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void initViews() {
 
-        et_user_name = findViewById(R.id.et_user_name);
-        et_email = findViewById(R.id.et_email);
-        et_password = findViewById(R.id.et_password);
-        et_re_password = findViewById(R.id.et_re_password);
-        btn_register = findViewById(R.id.btn_register);
-        nav_login = findViewById(R.id.nav_login);
+        etUserName = findViewById(R.id.et_user_name);
+        etEmail = findViewById(R.id.et_email);
+        etPassword = findViewById(R.id.et_password);
+        etRePassword = findViewById(R.id.et_re_password);
+        btnRegister = findViewById(R.id.btn_register);
+        navLogin = findViewById(R.id.nav_login);
 
     }
 
@@ -69,13 +71,15 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void buildButtons() {
 
-        nav_login.setOnClickListener(v ->
+        navLogin.setOnClickListener(v ->
         {
+
             startActivity(new Intent(this, LoginActivity.class));
             finish();
+
         });
 
-        btn_register.setOnClickListener(v ->
+        btnRegister.setOnClickListener(v ->
         {
 
             getString();
@@ -90,10 +94,10 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void getString() {
 
-        s_user_name = et_user_name.getText().toString().toLowerCase();
-        s_email = et_email.getText().toString().toLowerCase();
-        s_password = et_password.getText().toString();
-        s_re_password = et_re_password.getText().toString();
+        userName = etUserName.getText().toString().toLowerCase();
+        email = etEmail.getText().toString().toLowerCase();
+        password = etPassword.getText().toString();
+        rePassword = etRePassword.getText().toString();
 
     }
 
@@ -107,26 +111,25 @@ public class RegisterActivity extends AppCompatActivity {
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
 
-        if (!isConnected())
-            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+        if (!isConnected()) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
-        else if (s_user_name.isEmpty() || s_email.isEmpty()
-                || s_password.isEmpty() || s_re_password.isEmpty())
+        else if (userName.isEmpty()
+                || email.isEmpty()
+                || password.isEmpty()
+                || rePassword.isEmpty())
             Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
 
-        else if (s_user_name.length() < 6)
+        else if (userName.length() < 6)
             Toast.makeText(this, "Username must be at least 6 characters", Toast.LENGTH_SHORT).show();
 
-        else if (!(s_email.contains("@") && s_email.endsWith(".com"))
-                || s_email.startsWith("@")
-                || s_email.contains("@.com"))
+        else if (!(email.contains("@") && email.endsWith(".com"))
+                || email.startsWith("@")
+                || email.contains("@.com"))
             Toast.makeText(this, "Provide a valid Email Address", Toast.LENGTH_SHORT).show();
 
-        else if (s_password.length() < 6)
-            Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+        else if (password.length() < 6) Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
 
-        else if (!s_password.equals(s_re_password))
-            Toast.makeText(this, "Password doesn't match", Toast.LENGTH_SHORT).show();
+        else if (!password.equals(rePassword)) Toast.makeText(this, "Password doesn't match", Toast.LENGTH_SHORT).show();
 
         else return true;
 
@@ -136,8 +139,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     private boolean isConnected() {
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        final ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
 
     }
@@ -146,19 +149,22 @@ public class RegisterActivity extends AppCompatActivity {
 
         firebaseFirestore
                 .collection("Users")
-                .whereEqualTo("user_name", s_user_name)
+                .whereEqualTo("user_name", userName)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots ->
                 {
 
-                    if (queryDocumentSnapshots != null) {
+                    if (queryDocumentSnapshots != null)
+                    {
 
-                        if (!queryDocumentSnapshots.isEmpty()) {
+                        if (!queryDocumentSnapshots.isEmpty())
+                        {
 
                             pd.dismiss();
                             Toast.makeText(this, "Username is Already Taken!", Toast.LENGTH_SHORT).show();
 
-                        } else onRegister();
+                        }
+                        else onRegister();
 
                     }
 
@@ -170,25 +176,26 @@ public class RegisterActivity extends AppCompatActivity {
     private void onRegister() {
 
         firebaseAuth
-                .createUserWithEmailAndPassword(s_email, s_password)
+                .createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(authResult ->
                 {
 
                     firebaseUser = firebaseAuth.getCurrentUser();
 
-                    if (firebaseUser != null) {
+                    if (firebaseUser != null)
+                    {
 
-                        final int i_user_balance = 250;
-                        final String s_user_id = firebaseUser.getUid();
+                        final int userBalance = 250;
+                        final String userId = firebaseUser.getUid();
 
                         final UserModel user = new UserModel(
-                                i_user_balance,
-                                s_email,
-                                s_user_id,
-                                s_user_name
+                                userBalance,
+                                email,
+                                userId,
+                                userName
                         );
 
-                        setUser(s_user_id, user);
+                        setUser(userId, user);
 
                     }
 
@@ -197,16 +204,13 @@ public class RegisterActivity extends AppCompatActivity {
 
                     pd.dismiss();
 
-                    final String s_e = e.toString().toLowerCase();
+                    final String _e = e.toString().toLowerCase();
 
-                    if (s_e.contains("the email address is already in use by another account"))
-                        Toast.makeText(this, "Email is Already Exist!", Toast.LENGTH_SHORT).show();
+                    if (_e.contains("the email address is already in use by another account")) Toast.makeText(this, "Email is Already Exist!", Toast.LENGTH_SHORT).show();
 
-                    else if (s_e.contains("a network error (such as timeout, interrupted connection or unreachable host) has occurred"))
-                        Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                    else if (_e.contains("a network error (such as timeout, interrupted connection or unreachable host) has occurred")) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
-                    else
-                        Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+                    else Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
 
                 });
 
@@ -225,7 +229,8 @@ public class RegisterActivity extends AppCompatActivity {
 
                     if (documentSnapshot != null)
 
-                        if (!documentSnapshot.exists()) {
+                        if (!documentSnapshot.exists())
+                        {
 
                             documentRef
                                     .set(user)
