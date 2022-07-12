@@ -9,7 +9,7 @@ public class RouteModel {
 
     }
 
-    public RouteModel(String route_id, String route_name) {
+    public RouteModel(final String route_id, final String route_name) {
 
         this.route_id = route_id;
         this.route_name = route_name;
