@@ -11,7 +11,7 @@ public class UserModel {
 
     }
 
-    public UserModel(int user_balance, String user_email, String user_id, String user_name) {
+    public UserModel(final int user_balance, final String user_email, final String user_id, final String user_name) {
 
         this.user_balance = user_balance;
         this.user_email = user_email;
