@@ -16,7 +16,8 @@ public class TicketModel {
 
     }
 
-    public TicketModel(String bus_id, Date bus_timestamp, String route_name, String ticket_id, String user_id) {
+    public TicketModel(final String bus_id, final Date bus_timestamp, final String route_name, final String ticket_id, final String user_id)
+    {
 
         this.bus_id = bus_id;
         this.bus_timestamp = bus_timestamp;
