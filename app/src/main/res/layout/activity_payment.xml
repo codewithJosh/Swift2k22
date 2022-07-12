@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorAliceBlue"
+    android:background="@color/color_alice_blue"
     tools:context=".PaymentActivity">
 
     <ImageView
@@ -72,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Swift Wallet"
-            android:textColor="@color/colorDavysGrey"
+            android:textColor="@color/color_davys_grey"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -81,7 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Pay Now"
-            android:textColor="@color/colorBlueJeans"
+            android:textColor="@color/color_blue_jeans"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_swift" />
@@ -90,7 +90,7 @@
             android:id="@+id/tv_user_balance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorDavysGrey"
+            android:textColor="@color/color_davys_grey"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -100,7 +100,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Available Balance"
-            android:textColor="@color/colorArgent"
+            android:textColor="@color/color_argent"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_user_balance" />
@@ -136,7 +136,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Amount Due"
-            android:textColor="@color/colorDavysGrey"
+            android:textColor="@color/color_davys_grey"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -145,7 +145,7 @@
             android:id="@+id/tv_bus_fare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorDavysGrey"
+            android:textColor="@color/color_davys_grey"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -157,7 +157,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="Discount"
-            android:textColor="@color/colorDavysGrey"
+            android:textColor="@color/color_davys_grey"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_amount" />
@@ -167,7 +167,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="No available voucher"
-            android:textColor="@color/colorArgent"
+            android:textColor="@color/color_argent"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_bus_fare" />
@@ -177,7 +177,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="15dp"
-            android:background="@color/colorArgent"
+            android:background="@color/color_argent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -189,7 +189,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="Total Amount"
-            android:textColor="@color/colorDavysGrey"
+            android:textColor="@color/color_davys_grey"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/v" />
@@ -199,7 +199,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:textColor="@color/colorDavysGrey"
+            android:textColor="@color/color_davys_grey"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -216,7 +216,7 @@
         android:layout_marginTop="15dp"
         android:text="Please review to ensure that the details are correct before you proceed"
         android:textAlignment="center"
-        android:textColor="@color/colorArgent"
+        android:textColor="@color/color_argent"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

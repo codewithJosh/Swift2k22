@@ -2,15 +2,15 @@
     <!-- Base application theme. -->
     <style name="Theme.Swift" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/colorVividCerulean</item>
+        <item name="colorPrimary">@color/color_vivid_cerulean</item>
         <item name="colorPrimaryVariant">?attr/colorPrimary</item>
-        <item name="colorOnPrimary">@color/colorWhite_FF</item>
+        <item name="colorOnPrimary">@color/color_white_ff</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/colorStarCommandBlue</item>
+        <item name="colorSecondary">@color/color_star_command_blue</item>
         <item name="colorSecondaryVariant">?attr/colorSecondary</item>
-        <item name="colorOnSecondary">@color/colorBlack</item>
+        <item name="colorOnSecondary">@color/color_black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
 </resources>

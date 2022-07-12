@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorBlack">#151515</color>
-    <color name="colorBlack_FF">#FF000000</color>
-    <color name="colorWhite_FF">#FFFFFFFF</color>
-    <color name="colorVividCerulean">#0FA4F1</color>
-    <color name="colorStarCommandBlue">#0479B6</color>
-    <color name="colorDavysGrey">#555555</color>
-    <color name="colorGainsboro">#DDDDDD</color>
-    <color name="colorAliceBlue">#F1FBFF</color>
-    <color name="colorVividCerulean_B3">#B30FA4F1</color>
-    <color name="colorStarCommandBlue_99">#990479B6</color>
-    <color name="colorPlatinum">#E8E8E8</color>
-    <color name="colorBlueJeans">#54C3FE</color>
-    <color name="colorArgent">#C1C1C1</color>
+    <color name="color_black">#151515</color>
+    <color name="color_black_ff">#FF000000</color>
+    <color name="color_white_ff">#FFFFFFFF</color>
+    <color name="color_vivid_cerulean">#0FA4F1</color>
+    <color name="color_star_command_blue">#0479B6</color>
+    <color name="color_davys_grey">#555555</color>
+    <color name="color_gainsboro">#DDDDDD</color>
+    <color name="color_alice_blue">#F1FBFF</color>
+    <color name="color_vivid_cerulean_b3">#B30FA4F1</color>
+    <color name="color_star_command_blue_99">#990479B6</color>
+    <color name="color_platinum">#E8E8E8</color>
+    <color name="color_blue_jeans">#54C3FE</color>
+    <color name="color_argent">#C1C1C1</color>
 </resources>

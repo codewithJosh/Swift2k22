@@ -51,8 +51,8 @@ public class ViewTicketActivity extends AppCompatActivity {
         tv_ticket_id = findViewById(R.id.tv_ticket_id);
         tv_bus_timestamp = findViewById(R.id.tv_bus_timestamp);
 
-        getWindow().setNavigationBarColor(getResources().getColor(R.color.colorBlueJeans));
-        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorBlueJeans));
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.color_blue_jeans));
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.color_blue_jeans));
 
     }
 
