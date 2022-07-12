@@ -77,7 +77,8 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
         if (dateBusTimestamp != null) tvBusTimestamp.setText(dateFormat.format(dateBusTimestamp));
 
         dateFormat = new SimpleDateFormat(busDateTimestamp);
-        if (dateBusTimestamp != null) tvBusDateTimestamp.setText(dateFormat.format(dateBusTimestamp));
+        if (dateBusTimestamp != null)
+            tvBusDateTimestamp.setText(dateFormat.format(dateBusTimestamp));
 
         firebaseFirestore
                 .collection("Buses")
@@ -85,8 +86,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null)
-                    {
+                    if (value != null) {
 
                         final BusModel bus = value.toObject(BusModel.class);
 
@@ -117,7 +117,8 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
 
                 });
 
-        if (position % 2 == 0) constraint.setBackgroundColor(context.getResources().getColor(R.color.color_blue_jeans));
+        if (position % 2 == 0)
+            constraint.setBackgroundColor(context.getResources().getColor(R.color.color_blue_jeans));
 
     }
 

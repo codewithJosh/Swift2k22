@@ -45,5 +45,5 @@ dependencies {
 
 //    add dependency on ZXing, Journey ZXingAndroidEmbedded
     implementation 'com.journeyapps:zxing-android-embedded:3.4.0'
-    
+
 }

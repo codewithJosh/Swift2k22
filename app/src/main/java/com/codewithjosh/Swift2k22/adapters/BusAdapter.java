@@ -50,6 +50,28 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
 
     }
 
+    public static String getTimeAgo(final Date date) {
+
+        long time = date.getTime();
+        if (time < 1000000000000L) time *= 1000;
+
+        final long now = currentDate().getTime();
+        if (time > now || time <= 0) return "AT THE STATION";
+
+        final long diff = now - time;
+        if (diff < minuteMillis) return "INBOUND";
+
+        else return "DEPARTED";
+
+    }
+
+    private static Date currentDate() {
+
+        final Calendar calendar = Calendar.getInstance();
+        return calendar.getTime();
+
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -102,25 +124,23 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null)
-                    {
+                    if (value != null) {
 
                         final int currentBusSlots = value.size();
                         final int availableBusSlots = busSlots - currentBusSlots;
 
-                        if (availableBusSlots != 0)
-                        {
+                        if (availableBusSlots != 0) {
 
                             final String _busSlots = availableBusSlots + " slots left";
 
-                            if (!getTimeAgo(dateBusTimestamp).equals("DEPARTED")) tvBusSlots.setText(_busSlots);
+                            if (!getTimeAgo(dateBusTimestamp).equals("DEPARTED"))
+                                tvBusSlots.setText(_busSlots);
 
-                        }
-                        else
-                        {
+                        } else {
 
                             tvBusSlots.setText("");
-                            if (constraintHiddenBox.getVisibility() == View.VISIBLE) constraintHiddenBox.setVisibility(View.GONE);
+                            if (constraintHiddenBox.getVisibility() == View.VISIBLE)
+                                constraintHiddenBox.setVisibility(View.GONE);
 
                         }
 
@@ -131,10 +151,10 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
         constraintMainBox.setOnClickListener(v ->
         {
 
-            if (!getTimeAgo(dateBusTimestamp).equals("DEPARTED") && !tvBusSlots.getText().toString().equals(""))
-            {
+            if (!getTimeAgo(dateBusTimestamp).equals("DEPARTED") && !tvBusSlots.getText().toString().equals("")) {
 
-                if (constraintHiddenBox.getVisibility() == View.GONE) constraintHiddenBox.setVisibility(View.VISIBLE);
+                if (constraintHiddenBox.getVisibility() == View.GONE)
+                    constraintHiddenBox.setVisibility(View.VISIBLE);
 
                 else constraintHiddenBox.setVisibility(View.GONE);
 
@@ -158,11 +178,9 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
                         .addOnSuccessListener(queryDocumentSnapshots ->
                         {
 
-                            if (queryDocumentSnapshots != null)
-                            {
+                            if (queryDocumentSnapshots != null) {
 
-                                if (queryDocumentSnapshots.isEmpty())
-                                {
+                                if (queryDocumentSnapshots.isEmpty()) {
 
                                     editor.putString("bus_id", busId);
                                     editor.putString("route_name", routeName);
@@ -172,11 +190,9 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
                                     editor.apply();
                                     context.startActivity(new Intent(context, PaymentActivity.class));
 
-                                }
-                                else
+                                } else
 
-                                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots)
-                                    {
+                                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
 
                                         final TicketModel ticket = snapshot.toObject(TicketModel.class);
                                         final String ticketId = ticket.getTicket_id();
@@ -197,29 +213,8 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
 
         });
 
-        if (position % 2 == 0) constraintMainBox.setBackgroundColor(context.getResources().getColor(R.color.color_blue_jeans));
-
-    }
-
-    public static String getTimeAgo(final Date date) {
-
-        long time = date.getTime();
-        if (time < 1000000000000L) time *= 1000;
-
-        final long now = currentDate().getTime();
-        if (time > now || time <= 0) return "AT THE STATION";
-
-        final long diff = now - time;
-        if (diff < minuteMillis) return "INBOUND";
-
-        else return "DEPARTED";
-
-    }
-
-    private static Date currentDate() {
-
-        final Calendar calendar = Calendar.getInstance();
-        return calendar.getTime();
+        if (position % 2 == 0)
+            constraintMainBox.setBackgroundColor(context.getResources().getColor(R.color.color_blue_jeans));
 
     }
 

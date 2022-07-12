@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.BarcodeFormat;
@@ -91,9 +90,7 @@ public class ViewTicketActivity extends AppCompatActivity {
             final Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
             ivBarcode.setImageBitmap(bitmap);
 
-        }
-        catch (WriterException e)
-        {
+        } catch (WriterException e) {
 
             e.printStackTrace();
 

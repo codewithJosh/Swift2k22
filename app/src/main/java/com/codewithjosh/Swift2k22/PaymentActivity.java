@@ -60,13 +60,11 @@ public class PaymentActivity extends AppCompatActivity {
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null)
-                    {
+                    if (value != null) {
 
                         final UserModel user = value.toObject(UserModel.class);
 
-                        if (user != null)
-                        {
+                        if (user != null) {
 
                             final int userBalance = user.getUser_balance();
                             final int futureUserBalance = userBalance - busFare;
@@ -81,8 +79,7 @@ public class PaymentActivity extends AppCompatActivity {
                                 pd.setMessage("Please wait");
                                 pd.show();
 
-                                if (futureUserBalance >= 0)
-                                {
+                                if (futureUserBalance >= 0) {
 
                                     final String ticketId = firebaseFirestore
                                             .collection("Tickets")
@@ -133,9 +130,7 @@ public class PaymentActivity extends AppCompatActivity {
 
                                             });
 
-                                }
-                                else
-                                {
+                                } else {
 
                                     pd.dismiss();
                                     Toast.makeText(this, "You have insufficient balance!", Toast.LENGTH_SHORT).show();
@@ -200,8 +195,7 @@ public class PaymentActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentSnapshot ->
                 {
 
-                    if (documentSnapshot != null)
-                    {
+                    if (documentSnapshot != null) {
 
                         final BusModel bus = documentSnapshot.toObject(BusModel.class);
 

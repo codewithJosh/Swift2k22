@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,8 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void initViews()
-    {
+    private void initViews() {
 
         getWindow().setNavigationBarColor(getResources().getColor(R.color.color_vivid_cerulean));
         getWindow().setStatusBarColor(getResources().getColor(R.color.color_vivid_cerulean));
@@ -48,8 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void build()
-    {
+    private void build() {
 
         Thread thread = new Thread() {
 
@@ -68,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
                     if (isConnected()) checkCurrentAuthState();
 
-                    else runOnUiThread(() -> Toast.makeText(MainActivity.this, "No Internet Connection!", Toast.LENGTH_LONG).show());
+                    else
+                        runOnUiThread(() -> Toast.makeText(MainActivity.this, "No Internet Connection!", Toast.LENGTH_LONG).show());
 
                 }
 
@@ -91,8 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (firebaseUser != null)
-        {
+        if (firebaseUser != null) {
 
             final String userId = firebaseUser.getUid();
 
@@ -101,8 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
             startActivity(new Intent(this, HomeActivity.class));
 
-        }
-        else startActivity(new Intent(this, LoginActivity.class));
+        } else startActivity(new Intent(this, LoginActivity.class));
 
         finish();
 

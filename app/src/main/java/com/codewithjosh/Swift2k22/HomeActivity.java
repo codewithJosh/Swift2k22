@@ -58,8 +58,7 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    private void initRecyclerView()
-    {
+    private void initRecyclerView() {
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setReverseLayout(true);
@@ -82,12 +81,12 @@ public class HomeActivity extends AppCompatActivity {
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null)
-                    {
+                    if (value != null) {
 
                         if (isConnected()) onLoadRoutes(value);
 
-                        else Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
                     }
 

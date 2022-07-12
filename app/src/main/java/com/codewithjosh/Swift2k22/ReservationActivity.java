@@ -39,6 +39,13 @@ public class ReservationActivity extends AppCompatActivity {
     private BusAdapter busAdapter;
     private List<BusModel> buses;
 
+    private static Date currentDate() {
+
+        final Calendar calendar = Calendar.getInstance();
+        return calendar.getTime();
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -67,8 +74,7 @@ public class ReservationActivity extends AppCompatActivity {
 
     }
 
-    private void initRecyclerView()
-    {
+    private void initRecyclerView() {
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerBus.setLayoutManager(linearLayoutManager);
@@ -107,12 +113,12 @@ public class ReservationActivity extends AppCompatActivity {
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null)
-                    {
+                    if (value != null) {
 
                         if (isConnected()) onLoadBuses(value);
 
-                        else Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -131,8 +137,7 @@ public class ReservationActivity extends AppCompatActivity {
     private void onLoadBuses(final QuerySnapshot value) {
 
         buses.clear();
-        for (QueryDocumentSnapshot snapshot : value)
-        {
+        for (QueryDocumentSnapshot snapshot : value) {
 
             final BusModel bus = snapshot.toObject(BusModel.class);
             final Date date = bus.getBus_timestamp();
@@ -147,8 +152,7 @@ public class ReservationActivity extends AppCompatActivity {
 
             final long diff = now - time;
 
-            if (diff < 30 * minuteMillis)
-            {
+            if (diff < 30 * minuteMillis) {
 
                 buses.add(bus);
                 Collections.sort(buses, BusModel.comparator);
@@ -157,13 +161,6 @@ public class ReservationActivity extends AppCompatActivity {
             busAdapter.notifyDataSetChanged();
 
         }
-
-    }
-
-    private static Date currentDate() {
-
-        final Calendar calendar = Calendar.getInstance();
-        return calendar.getTime();
 
     }
 
