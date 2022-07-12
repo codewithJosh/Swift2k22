@@ -1,6 +1,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <gradient
-        android:endColor="@color/colorStarCommandBlue_99"
-        android:startColor="@color/colorVividCerulean_B3" />
+        android:endColor="@color/color_star_command_blue_99"
+        android:startColor="@color/color_vivid_cerulean_b3" />
 
 </shape>

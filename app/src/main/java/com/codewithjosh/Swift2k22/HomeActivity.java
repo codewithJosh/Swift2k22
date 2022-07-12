@@ -24,12 +24,12 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
-    Button nav_ticket;
-    RecyclerView recycler_routes;
+    Button navTicket;
+    RecyclerView recyclerRoutes;
     FirebaseFirestore firebaseFirestore;
     private RouteAdapter routeAdapter;
-    private List<BusModel> busList;
-    private List<RouteModel> routeList;
+    private List<BusModel> buses;
+    private List<RouteModel> routes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,18 +46,25 @@ public class HomeActivity extends AppCompatActivity {
 
     private void initViews() {
 
-        nav_ticket = findViewById(R.id.nav_ticket);
-        recycler_routes = findViewById(R.id.recycler_routes);
+        navTicket = findViewById(R.id.nav_ticket);
+        recyclerRoutes = findViewById(R.id.recycler_routes);
 
-        recycler_routes.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        initRecyclerView();
+
+        routes = new ArrayList<>();
+        buses = new ArrayList<>();
+        routeAdapter = new RouteAdapter(this, routes, buses);
+        recyclerRoutes.setAdapter(routeAdapter);
+
+    }
+
+    private void initRecyclerView() {
+
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
-        recycler_routes.setLayoutManager(linearLayoutManager);
-        routeList = new ArrayList<>();
-        busList = new ArrayList<>();
-        routeAdapter = new RouteAdapter(this, routeList, busList);
-        recycler_routes.setAdapter(routeAdapter);
+        recyclerRoutes.setLayoutManager(linearLayoutManager);
+        recyclerRoutes.setHasFixedSize(true);
 
     }
 
@@ -76,10 +83,10 @@ public class HomeActivity extends AppCompatActivity {
 
                     if (value != null) {
 
-                        if (!isConnected())
-                            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                        if (isConnected()) onLoadRoutes(value);
 
-                        else onLoadRoutes(value);
+                        else
+                            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -89,20 +96,20 @@ public class HomeActivity extends AppCompatActivity {
 
     private boolean isConnected() {
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        final ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
 
     }
 
     private void onLoadRoutes(final QuerySnapshot value) {
 
-        routeList.clear();
+        routes.clear();
         for (QueryDocumentSnapshot snapshot : value) {
 
             final RouteModel route = snapshot.toObject(RouteModel.class);
 
-            routeList.add(route);
+            routes.add(route);
 
         }
         routeAdapter.notifyDataSetChanged();
@@ -111,7 +118,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void buildButtons() {
 
-        nav_ticket.setOnClickListener(v -> startActivity(new Intent(this, TicketActivity.class)));
+        navTicket.setOnClickListener(v -> startActivity(new Intent(this, TicketActivity.class)));
 
     }
 

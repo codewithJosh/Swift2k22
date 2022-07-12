@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.codewithjosh.Swift2k22.R;
@@ -23,17 +24,17 @@ import java.util.Date;
 import java.util.List;
 
 public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder> {
+
     public Context context;
-    public List<TicketModel> ticketList;
+    public List<TicketModel> tickets;
     FirebaseFirestore firebaseFirestore;
     DateFormat dateFormat;
-    SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
 
-    public TicketAdapter(Context context, List<TicketModel> ticketList) {
+    public TicketAdapter(final Context context, final List<TicketModel> tickets) {
 
         this.context = context;
-        this.ticketList = ticketList;
+        this.tickets = tickets;
 
     }
 
@@ -41,47 +42,47 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View v = LayoutInflater.from(context).inflate(R.layout.item_ticket, parent, false);
-        return new ViewHolder(v);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_ticket, parent, false);
+        return new ViewHolder(view);
 
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        final TicketModel ticket = ticketList.get(position);
+        final TicketModel ticket = tickets.get(position);
 
 //        initViews
-        final TextView tv_route_name = holder.tv_route_name;
-        final TextView tv_bus_number = holder.tv_bus_number;
-        final TextView tv_bus_timestamp = holder.tv_bus_timestamp;
-        final TextView tv_bus_date_timestamp = holder.tv_bus_date_timestamp;
+        final ConstraintLayout constraint = holder.constraint;
+        final TextView tvRouteName = holder.tvRouteName;
+        final TextView tvBusNumber = holder.tvBusNumber;
+        final TextView tvBusTimestamp = holder.tvBusTimestamp;
+        final TextView tvBusDateTimestamp = holder.tvBusDateTimestamp;
 
 //        load
-        final String s_route_name = ticket.getRoute_name();
-        final String s_ticket_id = ticket.getTicket_id();
-        final String s_bus_id = ticket.getBus_id();
-        final Date date_bus_timestamp = ticket.getBus_timestamp();
-        final String s_bus_date_timestamp = "MMMM dd, yyyy";
-        final String s_bus_timestamp = "h:mm a";
-        final String s_future_bus_timestamp = "dd MMMM yyyy h:mm a";
+        final String routeName = ticket.getRoute_name();
+        final String ticketId = ticket.getTicket_id();
+        final String busId = ticket.getBus_id();
+        final Date dateBusTimestamp = ticket.getBus_timestamp();
+        final String busDateTimestamp = "MMMM dd, yyyy";
+        final String busTimestamp = "h:mm a";
+        final String futureBusTimestamp = "dd MMMM yyyy h:mm a";
 
         initInstances();
         initSharedPref();
 
-        tv_route_name.setText(s_route_name);
+        tvRouteName.setText(routeName);
 
-        dateFormat = new SimpleDateFormat(s_bus_timestamp);
-        if (date_bus_timestamp != null)
-            tv_bus_timestamp.setText(dateFormat.format(date_bus_timestamp));
+        dateFormat = new SimpleDateFormat(busTimestamp);
+        if (dateBusTimestamp != null) tvBusTimestamp.setText(dateFormat.format(dateBusTimestamp));
 
-        dateFormat = new SimpleDateFormat(s_bus_date_timestamp);
-        if (date_bus_timestamp != null)
-            tv_bus_date_timestamp.setText(dateFormat.format(date_bus_timestamp));
+        dateFormat = new SimpleDateFormat(busDateTimestamp);
+        if (dateBusTimestamp != null)
+            tvBusDateTimestamp.setText(dateFormat.format(dateBusTimestamp));
 
         firebaseFirestore
                 .collection("Buses")
-                .document(s_bus_id)
+                .document(busId)
                 .addSnapshotListener((value, error) ->
                 {
 
@@ -89,22 +90,25 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
 
                         final BusModel bus = value.toObject(BusModel.class);
 
-                        final String s_bus_number = bus != null ? bus.getBus_number() : "";
+                        final String busNumber = bus != null
+                                ? bus.getBus_number()
+                                : "";
 
-                        tv_bus_number.setText(s_bus_number);
+                        tvBusNumber.setText(busNumber);
 
                         holder.itemView.setOnClickListener(v ->
                         {
 
-                            dateFormat = new SimpleDateFormat(s_future_bus_timestamp);
-                            final String _s_future_bus_timestamp = dateFormat.format(date_bus_timestamp);
-                            final int i_bus_fare = bus != null ? bus.getBus_fare() : 0;
+                            dateFormat = new SimpleDateFormat(futureBusTimestamp);
+                            final String _futureBusTimestamp = dateFormat.format(dateBusTimestamp);
+                            final int busFare = bus != null
+                                    ? bus.getBus_fare()
+                                    : 0;
 
-                            editor.putString("s_ticket_id", s_ticket_id);
-                            editor.putString("s_future_bus_timestamp", _s_future_bus_timestamp);
-                            editor.putInt("i_bus_fare", i_bus_fare);
+                            editor.putString("ticket_id", ticketId);
+                            editor.putString("future_bus_timestamp", _futureBusTimestamp);
+                            editor.putInt("bus_fare", busFare);
                             editor.apply();
-
                             context.startActivity(new Intent(context, ViewTicketActivity.class));
 
                         });
@@ -112,6 +116,9 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
                     }
 
                 });
+
+        if (position % 2 == 0)
+            constraint.setBackgroundColor(context.getResources().getColor(R.color.color_blue_jeans));
 
     }
 
@@ -123,33 +130,34 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
 
     private void initSharedPref() {
 
-        sharedPref = context.getSharedPreferences("user", Context.MODE_PRIVATE);
-        editor = sharedPref.edit();
+        editor = context.getSharedPreferences("user", Context.MODE_PRIVATE).edit();
 
     }
 
     @Override
     public int getItemCount() {
 
-        return ticketList.size();
+        return tickets.size();
 
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tv_route_name;
-        TextView tv_bus_number;
-        TextView tv_bus_timestamp;
-        TextView tv_bus_date_timestamp;
+        public ConstraintLayout constraint;
+        public TextView tvRouteName;
+        public TextView tvBusNumber;
+        public TextView tvBusTimestamp;
+        public TextView tvBusDateTimestamp;
 
         public ViewHolder(@NonNull View itemView) {
 
             super(itemView);
 
-            tv_route_name = itemView.findViewById(R.id.tv_route_name);
-            tv_bus_number = itemView.findViewById(R.id.tv_bus_number);
-            tv_bus_timestamp = itemView.findViewById(R.id.tv_bus_timestamp);
-            tv_bus_date_timestamp = itemView.findViewById(R.id.tv_bus_date_timestamp);
+            constraint = itemView.findViewById(R.id.constraint);
+            tvRouteName = itemView.findViewById(R.id.tv_route_name);
+            tvBusNumber = itemView.findViewById(R.id.tv_bus_number);
+            tvBusTimestamp = itemView.findViewById(R.id.tv_bus_timestamp);
+            tvBusDateTimestamp = itemView.findViewById(R.id.tv_bus_date_timestamp);
 
         }
 

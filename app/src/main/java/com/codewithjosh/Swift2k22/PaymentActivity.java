@@ -22,18 +22,18 @@ import java.util.HashMap;
 
 public class PaymentActivity extends AppCompatActivity {
 
-    Button btn_payment;
-    TextView tv_route_name;
-    TextView tv_bus_number;
-    TextView tv_user_balance;
-    TextView tv_bus_fare;
-    TextView tv_total_amount;
-    Date date_bus_timestamp;
-    String s_user_id;
-    String s_bus_id;
-    String s_route_name;
-    String s_bus_number;
-    int i_bus_fare;
+    Button btnPayment;
+    TextView tvRouteName;
+    TextView tvBusNumber;
+    TextView tvUserBalance;
+    TextView tvBusFare;
+    TextView tvTotalAmount;
+    Date dateBusTimestamp;
+    String userId;
+    String busId;
+    String routeName;
+    String busNumber;
+    int busFare;
     FirebaseFirestore firebaseFirestore;
     DocumentReference ticketRef;
     DocumentReference userRef;
@@ -54,7 +54,7 @@ public class PaymentActivity extends AppCompatActivity {
 
         userRef = firebaseFirestore
                 .collection("Users")
-                .document(s_user_id);
+                .document(userId);
 
         userRef
                 .addSnapshotListener((value, error) ->
@@ -64,97 +64,97 @@ public class PaymentActivity extends AppCompatActivity {
 
                         final UserModel user = value.toObject(UserModel.class);
 
-                        final int i_user_balance = user.getUser_balance();
-                        final int i_future_user_balance = i_user_balance - i_bus_fare;
-                        final String s_user_balance = "PHP " + i_user_balance + ".00";
+                        if (user != null) {
 
-                        tv_user_balance.setText(s_user_balance);
+                            final int userBalance = user.getUser_balance();
+                            final int futureUserBalance = userBalance - busFare;
+                            final String _userBalance = "PHP " + userBalance + ".00";
 
-                        btn_payment.setOnClickListener(v ->
-                        {
+                            tvUserBalance.setText(_userBalance);
 
-                            pd = new ProgressDialog(this);
-                            pd.setMessage("Please wait");
-                            pd.show();
+                            btnPayment.setOnClickListener(v ->
+                            {
 
-                            if (i_future_user_balance >= 0) {
+                                pd = new ProgressDialog(this);
+                                pd.setMessage("Please wait");
+                                pd.show();
 
-                                final String s_ticket_id = firebaseFirestore
-                                        .collection("Tickets")
-                                        .document()
-                                        .getId();
+                                if (futureUserBalance >= 0) {
 
-                                final TicketModel ticket = new TicketModel(
-                                        s_bus_id,
-                                        date_bus_timestamp,
-                                        s_route_name,
-                                        s_ticket_id,
-                                        s_user_id
-                                );
+                                    final String ticketId = firebaseFirestore
+                                            .collection("Tickets")
+                                            .document()
+                                            .getId();
 
-                                final HashMap<String, Object> _user = new HashMap<>();
-                                _user.put("user_balance", i_future_user_balance);
+                                    final TicketModel ticket = new TicketModel(
+                                            busId,
+                                            dateBusTimestamp,
+                                            routeName,
+                                            ticketId,
+                                            userId
+                                    );
 
-                                ticketRef = firebaseFirestore
-                                        .collection("Tickets")
-                                        .document(s_ticket_id);
+                                    final HashMap<String, Object> _user = new HashMap<>();
+                                    _user.put("user_balance", futureUserBalance);
 
-                                ticketRef
-                                        .get()
-                                        .addOnSuccessListener(_documentSnapshot ->
-                                        {
+                                    ticketRef = firebaseFirestore
+                                            .collection("Tickets")
+                                            .document(ticketId);
 
-                                            if (_documentSnapshot != null)
+                                    ticketRef
+                                            .get()
+                                            .addOnSuccessListener(_documentSnapshot ->
+                                            {
 
-                                                if (!_documentSnapshot.exists())
+                                                if (_documentSnapshot != null)
 
-                                                    ticketRef
-                                                            .set(ticket)
-                                                            .addOnSuccessListener(runnable ->
-                                                            {
+                                                    if (!_documentSnapshot.exists())
 
-                                                                userRef
-                                                                        .update(_user)
-                                                                        .addOnSuccessListener(_runnable ->
-                                                                        {
+                                                        ticketRef
+                                                                .set(ticket)
+                                                                .addOnSuccessListener(runnable ->
 
-                                                                            editor.putString("s_ticket_id", s_ticket_id);
-                                                                            editor.apply();
+                                                                        userRef
+                                                                                .update(_user)
+                                                                                .addOnSuccessListener(_runnable ->
+                                                                                {
 
-                                                                            Toast.makeText(this, "Transaction complete!", Toast.LENGTH_SHORT).show();
-                                                                            startActivity(new Intent(this, ViewTicketActivity.class));
-                                                                            finish();
+                                                                                    editor.putString("ticket_id", ticketId);
+                                                                                    editor.apply();
 
-                                                                        });
+                                                                                    Toast.makeText(this, "Transaction complete!", Toast.LENGTH_SHORT).show();
+                                                                                    startActivity(new Intent(this, ViewTicketActivity.class));
+                                                                                    finish();
 
-                                                            });
+                                                                                }));
 
-                                        });
+                                            });
 
-                            } else {
+                                } else {
 
-                                pd.dismiss();
-                                Toast.makeText(this, "You have insufficient balance!", Toast.LENGTH_SHORT).show();
+                                    pd.dismiss();
+                                    Toast.makeText(this, "You have insufficient balance!", Toast.LENGTH_SHORT).show();
 
-                            }
+                                }
 
-                        });
+                            });
+
+                        }
 
                     }
 
                 });
 
-
     }
 
     private void initViews() {
 
-        btn_payment = findViewById(R.id.btn_payment);
-        tv_route_name = findViewById(R.id.tv_route_name);
-        tv_bus_number = findViewById(R.id.tv_bus_number);
-        tv_user_balance = findViewById(R.id.tv_user_balance);
-        tv_bus_fare = findViewById(R.id.tv_bus_fare);
-        tv_total_amount = findViewById(R.id.tv_total_amount);
+        btnPayment = findViewById(R.id.btn_payment);
+        tvRouteName = findViewById(R.id.tv_route_name);
+        tvBusNumber = findViewById(R.id.tv_bus_number);
+        tvUserBalance = findViewById(R.id.tv_user_balance);
+        tvBusFare = findViewById(R.id.tv_bus_fare);
+        tvTotalAmount = findViewById(R.id.tv_total_amount);
 
     }
 
@@ -173,24 +173,24 @@ public class PaymentActivity extends AppCompatActivity {
 
     private void load() {
 
-        s_user_id = sharedPref.getString("s_user_id", String.valueOf(Context.MODE_PRIVATE));
-        s_bus_id = sharedPref.getString("s_bus_id", String.valueOf(Context.MODE_PRIVATE));
-        s_route_name = sharedPref.getString("s_route_name", String.valueOf(Context.MODE_PRIVATE));
-        s_bus_number = sharedPref.getString("s_bus_number", String.valueOf(Context.MODE_PRIVATE));
-        i_bus_fare = sharedPref.getInt("i_bus_fare", Context.MODE_PRIVATE);
+        userId = sharedPref.getString("user_id", String.valueOf(Context.MODE_PRIVATE));
+        busId = sharedPref.getString("bus_id", String.valueOf(Context.MODE_PRIVATE));
+        routeName = sharedPref.getString("route_name", String.valueOf(Context.MODE_PRIVATE));
+        busNumber = sharedPref.getString("bus_number", String.valueOf(Context.MODE_PRIVATE));
+        busFare = sharedPref.getInt("bus_fare", Context.MODE_PRIVATE);
 
-        final String s_bus_fare = "PHP " + i_bus_fare + ".00";
-        final String _s_bus_fare = "PAY " + s_bus_fare;
+        final String _busFare = "PHP " + busFare + ".00";
+        final String __busFare = "PAY " + _busFare;
 
-        tv_route_name.setText(s_route_name);
-        tv_bus_number.setText(s_bus_number);
-        tv_bus_fare.setText(s_bus_fare);
-        tv_total_amount.setText(s_bus_fare);
-        btn_payment.setText(_s_bus_fare);
+        tvRouteName.setText(routeName);
+        tvBusNumber.setText(busNumber);
+        tvBusFare.setText(_busFare);
+        tvTotalAmount.setText(_busFare);
+        btnPayment.setText(__busFare);
 
         firebaseFirestore
                 .collection("Buses")
-                .document(s_bus_id)
+                .document(busId)
                 .get()
                 .addOnSuccessListener(documentSnapshot ->
                 {
@@ -199,7 +199,7 @@ public class PaymentActivity extends AppCompatActivity {
 
                         final BusModel bus = documentSnapshot.toObject(BusModel.class);
 
-                        if (bus != null) date_bus_timestamp = bus.getBus_timestamp();
+                        if (bus != null) dateBusTimestamp = bus.getBus_timestamp();
 
                     }
 

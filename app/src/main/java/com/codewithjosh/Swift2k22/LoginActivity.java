@@ -23,18 +23,16 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class LoginActivity extends AppCompatActivity {
 
-    Button btn_login, nav_register;
-    EditText et_user_name, et_password;
-
-    String s_user_name, s_password;
-
+    Button btnLogin;
+    Button navRegister;
+    EditText etUserName;
+    EditText etPassword;
+    String userName;
+    String password;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firebaseFirestore;
     FirebaseUser firebaseUser;
-
     ProgressDialog pd;
-
-    SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
 
     @Override
@@ -52,10 +50,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private void initViews() {
 
-        et_user_name = findViewById(R.id.et_user_name);
-        et_password = findViewById(R.id.et_password);
-        btn_login = findViewById(R.id.btn_login);
-        nav_register = findViewById(R.id.nav_register);
+        etUserName = findViewById(R.id.et_user_name);
+        etPassword = findViewById(R.id.et_password);
+        btnLogin = findViewById(R.id.btn_login);
+        navRegister = findViewById(R.id.nav_register);
 
     }
 
@@ -68,20 +66,21 @@ public class LoginActivity extends AppCompatActivity {
 
     private void initSharedPref() {
 
-        sharedPref = getSharedPreferences("user", MODE_PRIVATE);
-        editor = sharedPref.edit();
+        editor = getSharedPreferences("user", MODE_PRIVATE).edit();
 
     }
 
     private void buildButtons() {
 
-        nav_register.setOnClickListener(v ->
+        navRegister.setOnClickListener(v ->
         {
+
             startActivity(new Intent(this, RegisterActivity.class));
             finish();
+
         });
 
-        btn_login.setOnClickListener(v ->
+        btnLogin.setOnClickListener(v ->
         {
 
             getString();
@@ -96,8 +95,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void getString() {
 
-        s_user_name = et_user_name.getText().toString().toLowerCase();
-        s_password = et_password.getText().toString();
+        userName = etUserName.getText().toString().toLowerCase();
+        password = etPassword.getText().toString();
 
     }
 
@@ -114,10 +113,10 @@ public class LoginActivity extends AppCompatActivity {
         if (!isConnected())
             Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
-        else if (s_user_name.isEmpty() || s_password.isEmpty())
+        else if (userName.isEmpty() || password.isEmpty())
             Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
 
-        else if (s_password.length() < 6)
+        else if (password.length() < 6)
             Toast.makeText(this, "Password Must be at least 6 characters", Toast.LENGTH_SHORT).show();
 
         else return true;
@@ -128,8 +127,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean isConnected() {
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        final ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
 
     }
@@ -138,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
 
         firebaseFirestore
                 .collection("Users")
-                .whereEqualTo("user_name", s_user_name)
+                .whereEqualTo("user_name", userName)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots ->
                 {
@@ -169,12 +168,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private void onLogin(final UserModel user) {
 
-        final String s_email = user.getUser_email();
+        final String email = user.getUser_email();
 
-        if (s_email != null)
+        if (email != null)
 
             firebaseAuth
-                    .signInWithEmailAndPassword(s_email, s_password)
+                    .signInWithEmailAndPassword(email, password)
                     .addOnSuccessListener(authResult ->
                     {
 
@@ -182,9 +181,9 @@ public class LoginActivity extends AppCompatActivity {
 
                         if (firebaseUser != null) {
 
-                            final String s_user_id = firebaseUser.getUid();
+                            final String userId = firebaseUser.getUid();
 
-                            editor.putString("s_user_id", s_user_id);
+                            editor.putString("user_id", userId);
                             editor.apply();
 
                             Toast.makeText(this, "Welcome, You've Successfully Login!", Toast.LENGTH_LONG).show();
@@ -198,70 +197,18 @@ public class LoginActivity extends AppCompatActivity {
 
                         pd.dismiss();
 
-                        final String s_e = e.toString().toLowerCase();
+                        final String _e = e.toString().toLowerCase();
 
-                        if (s_e.contains("the password is invalid or the user does not have a password"))
+                        if (_e.contains("the password is invalid or the user does not have a password"))
                             Toast.makeText(this, "Incorrect Password!", Toast.LENGTH_SHORT).show();
 
-                        else if (s_e.contains("a network error (such as timeout, interrupted connection or unreachable host) has occurred"))
+                        else if (_e.contains("a network error (such as timeout, interrupted connection or unreachable host) has occurred"))
                             Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
                         else
                             Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
 
                     });
-
-    }
-
-    private void _onLogin(String _username, String _password) {
-
-        firebaseFirestore
-                .collection("Users")
-                .whereEqualTo("user_name", _username)
-                .get()
-                .addOnCompleteListener(task -> {
-
-                    if (task.isSuccessful()) {
-
-                        if (task.getResult().isEmpty()) {
-
-                            pd.dismiss();
-                            Toast.makeText(LoginActivity.this, "User Doesn't Exist!", Toast.LENGTH_SHORT).show();
-                        } else {
-
-                            for (QueryDocumentSnapshot snapshot : task.getResult()) {
-
-                                final String _email = snapshot.get("user_email").toString();
-
-                                firebaseAuth.signInWithEmailAndPassword(_email, _password)
-                                        .addOnCompleteListener(LoginActivity.this, _task -> {
-
-                                            if (_task.isSuccessful()) {
-
-                                                pd.dismiss();
-                                                Toast.makeText(LoginActivity.this, "Welcome, You've Successfully Login!", Toast.LENGTH_LONG).show();
-                                                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                                                finish();
-                                            }
-
-                                        }).addOnFailureListener(e -> {
-
-                                            if (e.toString().contains("The password is invalid or the user does not have a password")) {
-                                                pd.dismiss();
-                                                Toast.makeText(LoginActivity.this, "Incorrect Password!", Toast.LENGTH_SHORT).show();
-                                            } else if (e.toString().contains("A network error (such as timeout, interrupted connection or unreachable host) has occurred")) {
-                                                pd.dismiss();
-                                                Toast.makeText(LoginActivity.this, "Internet Connection Lost!", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                pd.dismiss();
-                                                Toast.makeText(LoginActivity.this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                            }
-                        }
-
-                    }
-                });
 
     }
 
