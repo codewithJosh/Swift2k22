@@ -19,14 +19,14 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 public class ViewTicketActivity extends AppCompatActivity {
 
-    ImageView iv_barcode;
-    TextView tv_bus_fare;
-    TextView tv_total_amount;
-    TextView tv_ticket_id;
-    TextView tv_bus_timestamp;
-    int i_bus_fare;
-    String s_ticket_id;
-    String s_future_bus_timestamp;
+    ImageView ivBarcode;
+    TextView tvBusFare;
+    TextView tvTotalAmount;
+    TextView tvTicketId;
+    TextView tvBusTimestamp;
+    int busFare;
+    String ticketId;
+    String futureBusTimestamp;
     FirebaseFirestore firebaseFirestore;
     SharedPreferences sharedPref;
 
@@ -45,14 +45,14 @@ public class ViewTicketActivity extends AppCompatActivity {
 
     private void initViews() {
 
-        iv_barcode = findViewById(R.id.iv_barcode);
-        tv_bus_fare = findViewById(R.id.tv_bus_fare);
-        tv_total_amount = findViewById(R.id.tv_total_amount);
-        tv_ticket_id = findViewById(R.id.tv_ticket_id);
-        tv_bus_timestamp = findViewById(R.id.tv_bus_timestamp);
-
         getWindow().setNavigationBarColor(getResources().getColor(R.color.color_blue_jeans));
-        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.color_blue_jeans));
+        getWindow().setStatusBarColor(getResources().getColor(R.color.color_blue_jeans));
+
+        ivBarcode = findViewById(R.id.iv_barcode);
+        tvBusFare = findViewById(R.id.tv_bus_fare);
+        tvTotalAmount = findViewById(R.id.tv_total_amount);
+        tvTicketId = findViewById(R.id.tv_ticket_id);
+        tvBusTimestamp = findViewById(R.id.tv_bus_timestamp);
 
     }
 
@@ -70,28 +70,30 @@ public class ViewTicketActivity extends AppCompatActivity {
 
     private void load() {
 
-        s_ticket_id = sharedPref.getString("s_ticket_id", String.valueOf(Context.MODE_PRIVATE));
-        s_future_bus_timestamp = sharedPref.getString("s_future_bus_timestamp", String.valueOf(Context.MODE_PRIVATE));
-        i_bus_fare = sharedPref.getInt("i_bus_fare", Context.MODE_PRIVATE);
+        ticketId = sharedPref.getString("ticket_id", String.valueOf(Context.MODE_PRIVATE));
+        futureBusTimestamp = sharedPref.getString("future_bus_timestamp", String.valueOf(Context.MODE_PRIVATE));
+        busFare = sharedPref.getInt("bus_fare", Context.MODE_PRIVATE);
 
-        final String s_bus_fare = "PHP " + i_bus_fare + ".00";
-        final String _s_ticket_id = "Ref No: " + s_ticket_id.toUpperCase();
+        final String _busFare = "PHP " + busFare + ".00";
+        final String _ticketId = "Ref No: " + ticketId.toUpperCase();
 
-        tv_bus_fare.setText(s_bus_fare);
-        tv_total_amount.setText(s_bus_fare);
-        tv_ticket_id.setText(_s_ticket_id);
-        tv_bus_timestamp.setText(s_future_bus_timestamp);
+        tvBusFare.setText(_busFare);
+        tvTotalAmount.setText(_busFare);
+        tvTicketId.setText(_ticketId);
+        tvBusTimestamp.setText(futureBusTimestamp);
 
-        MultiFormatWriter writer = new MultiFormatWriter();
+        final MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
 
         try {
 
-            BitMatrix matrix = writer.encode(s_ticket_id, BarcodeFormat.CODE_128, 400, 100);
-            BarcodeEncoder encoder = new BarcodeEncoder();
-            Bitmap bitmap = encoder.createBitmap(matrix);
-            iv_barcode.setImageBitmap(bitmap);
+            final BitMatrix bitMatrix = multiFormatWriter.encode(ticketId, BarcodeFormat.CODE_128, 400, 100);
+            final BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            final Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+            ivBarcode.setImageBitmap(bitmap);
 
-        } catch (WriterException e) {
+        }
+        catch (WriterException e)
+        {
 
             e.printStackTrace();
 
