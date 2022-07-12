@@ -221,7 +221,7 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
         });
 
         if (position % 2 == 0)
-            constraint_main_box.setBackgroundColor(context.getResources().getColor(R.color.colorBlueJeans));
+            constraint_main_box.setBackgroundColor(context.getResources().getColor(R.color.color_blue_jeans));
 
     }
 

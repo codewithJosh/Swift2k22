@@ -28,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
         initSharedPref();
 
-        getWindow().setNavigationBarColor(getResources().getColor(R.color.colorVividCerulean));
-        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorVividCerulean));
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.color_vivid_cerulean));
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.color_vivid_cerulean));
 
         //hide action bar
         if (getSupportActionBar() != null) getSupportActionBar().hide();
