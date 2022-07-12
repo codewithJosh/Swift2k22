@@ -17,7 +17,7 @@ public class BusModel {
 
     }
 
-    public BusModel(int bus_fare, String bus_id, String bus_number, int bus_slots, Date bus_timestamp, String route_id) {
+    public BusModel(final int bus_fare, final String bus_id, final String bus_number, final int bus_slots, final Date bus_timestamp, final String route_id) {
 
         this.bus_fare = bus_fare;
         this.bus_id = bus_id;
