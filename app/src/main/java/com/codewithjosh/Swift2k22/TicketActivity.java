@@ -25,21 +25,14 @@ import java.util.List;
 
 public class TicketActivity extends AppCompatActivity {
 
-    private static final int SECOND_MILLIS = 1000;
-    private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
-    RecyclerView recycler_ticket;
-    String s_user_id;
+    private static final int secondMillis = 1000;
+    private static final int minuteMillis = 60 * secondMillis;
+    RecyclerView recyclerTicket;
+    String userId;
     FirebaseFirestore firebaseFirestore;
     SharedPreferences sharedPref;
     private TicketAdapter ticketAdapter;
-    private List<TicketModel> ticketList;
-
-    private static Date currentDate() {
-
-        Calendar calendar = Calendar.getInstance();
-        return calendar.getTime();
-
-    }
+    private List<TicketModel> tickets;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,28 +48,24 @@ public class TicketActivity extends AppCompatActivity {
 
     }
 
-    private void initSharedPref() {
-
-        sharedPref = getSharedPreferences("user", Context.MODE_PRIVATE);
-
-    }
-
-    private void load() {
-
-        s_user_id = sharedPref.getString("s_user_id", String.valueOf(Context.MODE_PRIVATE));
-
-    }
-
     private void initViews() {
 
-        recycler_ticket = findViewById(R.id.recycler_ticket);
+        recyclerTicket = findViewById(R.id.recycler_ticket);
 
-        recycler_ticket.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recycler_ticket.setLayoutManager(linearLayoutManager);
-        ticketList = new ArrayList<>();
-        ticketAdapter = new TicketAdapter(this, ticketList);
-        recycler_ticket.setAdapter(ticketAdapter);
+        initRecyclerView();
+
+        tickets = new ArrayList<>();
+        ticketAdapter = new TicketAdapter(this, tickets);
+        recyclerTicket.setAdapter(ticketAdapter);
+
+    }
+
+    private void initRecyclerView()
+    {
+
+        recyclerTicket.setHasFixedSize(true);
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerTicket.setLayoutManager(linearLayoutManager);
 
     }
 
@@ -86,20 +75,32 @@ public class TicketActivity extends AppCompatActivity {
 
     }
 
+    private void initSharedPref() {
+
+        sharedPref = getSharedPreferences("user", Context.MODE_PRIVATE);
+
+    }
+
+    private void load() {
+
+        userId = sharedPref.getString("user_id", String.valueOf(Context.MODE_PRIVATE));
+
+    }
+
     private void loadTickets() {
 
         firebaseFirestore
                 .collection("Tickets")
-                .whereEqualTo("user_id", s_user_id)
+                .whereEqualTo("user_id", userId)
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null) {
+                    if (value != null)
+                    {
 
-                        if (!isConnected())
-                            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                        if (isConnected()) onLoadTickets(value);
 
-                        else onLoadTickets(value);
+                        else Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -109,36 +110,47 @@ public class TicketActivity extends AppCompatActivity {
 
     private boolean isConnected() {
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        final ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
 
     }
 
     private void onLoadTickets(final QuerySnapshot value) {
 
-        ticketList.clear();
+        tickets.clear();
         for (QueryDocumentSnapshot snapshot : value) {
 
             final TicketModel ticket = snapshot.toObject(TicketModel.class);
-            final Date date_bus_timestamp = ticket.getBus_timestamp();
+            final Date date = ticket.getBus_timestamp();
 
-            long time = date_bus_timestamp != null ? date_bus_timestamp.getTime() : 0;
+            long time = date != null
+                    ? date.getTime()
+                    : 0;
+
             if (time < 1000000000000L) time *= 1000;
 
             long now = currentDate().getTime();
 
             final long diff = now - time;
 
-            if (diff < 30 * MINUTE_MILLIS) {
+            if (diff < 30 * minuteMillis)
+            {
 
-                ticketList.add(ticket);
-                Collections.sort(ticketList, TicketModel.comparator);
+                tickets.add(ticket);
+                Collections.sort(tickets, TicketModel.comparator);
 
             }
 
         }
         ticketAdapter.notifyDataSetChanged();
+
+    }
+
+    private static Date currentDate() {
+
+        final Calendar calendar = Calendar.getInstance();
+        return calendar.getTime();
 
     }
 
