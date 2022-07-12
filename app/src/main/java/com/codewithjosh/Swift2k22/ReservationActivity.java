@@ -26,28 +26,22 @@ import java.util.List;
 
 public class ReservationActivity extends AppCompatActivity {
 
-    private static final int SECOND_MILLIS = 1000;
-    private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
-    RecyclerView recycler_bus;
-    TextView tv_route_name;
-    TextView tv_bus_date_timestamp;
-    String s_route_id;
-    String s_route_name;
-    String s_bus_date_timestamp;
+    private static final int secondMillis = 1000;
+    private static final int minuteMillis = 60 * secondMillis;
+    RecyclerView recyclerBus;
+    TextView tvRouteName;
+    TextView tvBusDateTimestamp;
+    String routeId;
+    String routeName;
+    String busDateTimestamp;
     FirebaseFirestore firebaseFirestore;
     SharedPreferences sharedPref;
     private BusAdapter busAdapter;
-    private List<BusModel> busList;
-
-    private static Date currentDate() {
-
-        Calendar calendar = Calendar.getInstance();
-        return calendar.getTime();
-
-    }
+    private List<BusModel> buses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reservation);
 
@@ -61,16 +55,24 @@ public class ReservationActivity extends AppCompatActivity {
 
     private void initViews() {
 
-        recycler_bus = findViewById(R.id.recycler_bus);
-        tv_route_name = findViewById(R.id.tv_route_name);
-        tv_bus_date_timestamp = findViewById(R.id.tv_bus_date_timestamp);
+        recyclerBus = findViewById(R.id.recycler_bus);
+        tvRouteName = findViewById(R.id.tv_route_name);
+        tvBusDateTimestamp = findViewById(R.id.tv_bus_date_timestamp);
 
-        recycler_bus.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recycler_bus.setLayoutManager(linearLayoutManager);
-        busList = new ArrayList<>();
-        busAdapter = new BusAdapter(this, busList);
-        recycler_bus.setAdapter(busAdapter);
+        initRecyclerView();
+
+        buses = new ArrayList<>();
+        busAdapter = new BusAdapter(this, buses);
+        recyclerBus.setAdapter(busAdapter);
+
+    }
+
+    private void initRecyclerView()
+    {
+
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerBus.setLayoutManager(linearLayoutManager);
+        recyclerBus.setHasFixedSize(true);
 
     }
 
@@ -88,12 +90,12 @@ public class ReservationActivity extends AppCompatActivity {
 
     private void load() {
 
-        s_route_id = sharedPref.getString("s_route_id", String.valueOf(Context.MODE_PRIVATE));
-        s_route_name = sharedPref.getString("s_route_name", String.valueOf(Context.MODE_PRIVATE));
-        s_bus_date_timestamp = sharedPref.getString("s_bus_date_timestamp", String.valueOf(Context.MODE_PRIVATE));
+        routeId = sharedPref.getString("route_id", String.valueOf(Context.MODE_PRIVATE));
+        routeName = sharedPref.getString("route_name", String.valueOf(Context.MODE_PRIVATE));
+        busDateTimestamp = sharedPref.getString("bus_date_timestamp", String.valueOf(Context.MODE_PRIVATE));
 
-        tv_route_name.setText(s_route_name);
-        tv_bus_date_timestamp.setText(s_bus_date_timestamp);
+        tvRouteName.setText(routeName);
+        tvBusDateTimestamp.setText(busDateTimestamp);
 
     }
 
@@ -101,16 +103,16 @@ public class ReservationActivity extends AppCompatActivity {
 
         firebaseFirestore
                 .collection("Buses")
-                .whereEqualTo("route_id", s_route_id)
+                .whereEqualTo("route_id", routeId)
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null) {
+                    if (value != null)
+                    {
 
-                        if (!isConnected())
-                            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                        if (isConnected()) onLoadBuses(value);
 
-                        else onLoadBuses(value);
+                        else Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -120,36 +122,48 @@ public class ReservationActivity extends AppCompatActivity {
 
     private boolean isConnected() {
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        final ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
 
     }
 
     private void onLoadBuses(final QuerySnapshot value) {
 
-        busList.clear();
-        for (QueryDocumentSnapshot snapshot : value) {
+        buses.clear();
+        for (QueryDocumentSnapshot snapshot : value)
+        {
 
             final BusModel bus = snapshot.toObject(BusModel.class);
             final Date date = bus.getBus_timestamp();
 
-            long time = date != null ? date.getTime() : 0;
+            long time = date != null
+                    ? date.getTime()
+                    : 0;
+
             if (time < 1000000000000L) time *= 1000;
 
             long now = currentDate().getTime();
 
             final long diff = now - time;
 
-            if (diff < 30 * MINUTE_MILLIS) {
+            if (diff < 30 * minuteMillis)
+            {
 
-                busList.add(bus);
-                Collections.sort(busList, BusModel.comparator);
+                buses.add(bus);
+                Collections.sort(buses, BusModel.comparator);
 
             }
             busAdapter.notifyDataSetChanged();
 
         }
+
+    }
+
+    private static Date currentDate() {
+
+        final Calendar calendar = Calendar.getInstance();
+        return calendar.getTime();
 
     }
 
