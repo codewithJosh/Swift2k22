@@ -17,22 +17,39 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity {
 
     FirebaseUser firebaseUser;
-
-    SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initViews();
         initSharedPref();
+        build();
+
+    }
+
+    private void initViews()
+    {
 
         getWindow().setNavigationBarColor(getResources().getColor(R.color.color_vivid_cerulean));
-        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.color_vivid_cerulean));
+        getWindow().setStatusBarColor(getResources().getColor(R.color.color_vivid_cerulean));
 
         //hide action bar
         if (getSupportActionBar() != null) getSupportActionBar().hide();
+
+    }
+
+    private void initSharedPref() {
+
+        editor = getSharedPreferences("user", MODE_PRIVATE).edit();
+
+    }
+
+    private void build()
+    {
 
         Thread thread = new Thread() {
 
@@ -42,15 +59,16 @@ public class MainActivity extends AppCompatActivity {
                 try {
 
                     sleep(2000);
+
                 } catch (Exception e) {
 
                     e.printStackTrace();
+
                 } finally {
 
                     if (isConnected()) checkCurrentAuthState();
 
-                    else
-                        runOnUiThread(() -> Toast.makeText(MainActivity.this, "No Internet Connection!", Toast.LENGTH_LONG).show());
+                    else runOnUiThread(() -> Toast.makeText(MainActivity.this, "No Internet Connection!", Toast.LENGTH_LONG).show());
 
                 }
 
@@ -61,17 +79,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void initSharedPref() {
-
-        sharedPref = getSharedPreferences("user", MODE_PRIVATE);
-        editor = sharedPref.edit();
-
-    }
-
     private boolean isConnected() {
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        final ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
 
     }
@@ -80,15 +91,18 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (firebaseUser != null) {
+        if (firebaseUser != null)
+        {
 
-            final String s_user_id = firebaseUser.getUid();
+            final String userId = firebaseUser.getUid();
 
-            editor.putString("s_user_id", s_user_id);
+            editor.putString("user_id", userId);
             editor.apply();
 
             startActivity(new Intent(this, HomeActivity.class));
-        } else startActivity(new Intent(this, LoginActivity.class));
+
+        }
+        else startActivity(new Intent(this, LoginActivity.class));
 
         finish();
 
