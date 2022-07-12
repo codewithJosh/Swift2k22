@@ -32,22 +32,172 @@ import java.util.List;
 
 public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
 
-    private static final int SECOND_MILLIS = 1000;
-    private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
-
+    private static final int secondMillis = 1000;
+    private static final int minuteMillis = 60 * secondMillis;
     public Context context;
-    public List<BusModel> busList;
-    String s_user_id;
-    String s_route_name;
+    public List<BusModel> buses;
+    String userId;
+    String routeName;
     FirebaseFirestore firebaseFirestore;
     DateFormat dateFormat;
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
 
-    public BusAdapter(Context context, List<BusModel> busList) {
+    public BusAdapter(final Context context, final List<BusModel> buses) {
 
         this.context = context;
-        this.busList = busList;
+        this.buses = buses;
+
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        View view = LayoutInflater.from(context).inflate(R.layout.item_bus, parent, false);
+        return new ViewHolder(view);
+
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+        final BusModel bus = buses.get(position);
+
+//        initViews
+        final Button navPayment = holder.navPayment;
+        final ConstraintLayout constraintMainBox = holder.constraintMainBox;
+        final ConstraintLayout constraintHiddenBox = holder.constraintHiddenBox;
+        final TextView tvBusNumber = holder.tvBusNumber;
+        final TextView tvBusSlots = holder.tvBusSlots;
+        final TextView tvBusTimestamp = holder.tvBusTimestamp;
+        final TextView tvBusFare = holder.tvBusFare;
+        final TextView tvBusStatus = holder.tvBusStatus;
+
+//        load
+        final String busId = bus.getBus_id();
+        final int busFare = bus.getBus_fare();
+        final String _busFare = "PHP " + busFare + ".00";
+        final String busNumber = bus.getBus_number();
+        final int busSlots = bus.getBus_slots();
+        final Date dateBusTimestamp = bus.getBus_timestamp();
+        final String busTimestamp = "h:mm a";
+        final String futureBusTimestamp = "dd MMMM yyyy h:mm a";
+        final String busStatus = "STATUS: " + getTimeAgo(dateBusTimestamp);
+
+        dateFormat = new SimpleDateFormat(busTimestamp);
+
+        tvBusFare.setText(_busFare);
+        tvBusNumber.setText(busNumber);
+        tvBusTimestamp.setText(dateFormat.format(dateBusTimestamp));
+        tvBusStatus.setText(busStatus);
+
+        initInstances();
+        initSharedPref();
+        load();
+
+        firebaseFirestore
+                .collection("Tickets")
+                .whereEqualTo("bus_id", busId)
+                .addSnapshotListener((value, error) ->
+                {
+
+                    if (value != null)
+                    {
+
+                        final int currentBusSlots = value.size();
+                        final int availableBusSlots = busSlots - currentBusSlots;
+
+                        if (availableBusSlots != 0)
+                        {
+
+                            final String _busSlots = availableBusSlots + " slots left";
+
+                            if (!getTimeAgo(dateBusTimestamp).equals("DEPARTED")) tvBusSlots.setText(_busSlots);
+
+                        }
+                        else
+                        {
+
+                            tvBusSlots.setText("");
+                            if (constraintHiddenBox.getVisibility() == View.VISIBLE) constraintHiddenBox.setVisibility(View.GONE);
+
+                        }
+
+                    }
+
+                });
+
+        constraintMainBox.setOnClickListener(v ->
+        {
+
+            if (!getTimeAgo(dateBusTimestamp).equals("DEPARTED") && !tvBusSlots.getText().toString().equals(""))
+            {
+
+                if (constraintHiddenBox.getVisibility() == View.GONE) constraintHiddenBox.setVisibility(View.VISIBLE);
+
+                else constraintHiddenBox.setVisibility(View.GONE);
+
+            }
+
+        });
+
+        navPayment.setOnClickListener(v ->
+        {
+
+            dateFormat = new SimpleDateFormat(futureBusTimestamp);
+            final String _futureBusTimestamp = dateFormat.format(dateBusTimestamp);
+
+            if (isConnected())
+
+                firebaseFirestore
+                        .collection("Tickets")
+                        .whereEqualTo("user_id", userId)
+                        .whereEqualTo("bus_id", busId)
+                        .get()
+                        .addOnSuccessListener(queryDocumentSnapshots ->
+                        {
+
+                            if (queryDocumentSnapshots != null)
+                            {
+
+                                if (queryDocumentSnapshots.isEmpty())
+                                {
+
+                                    editor.putString("bus_id", busId);
+                                    editor.putString("route_name", routeName);
+                                    editor.putString("bus_number", busNumber);
+                                    editor.putString("future_bus_timestamp", _futureBusTimestamp);
+                                    editor.putInt("bus_fare", busFare);
+                                    editor.apply();
+                                    context.startActivity(new Intent(context, PaymentActivity.class));
+
+                                }
+                                else
+
+                                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots)
+                                    {
+
+                                        final TicketModel ticket = snapshot.toObject(TicketModel.class);
+                                        final String ticketId = ticket.getTicket_id();
+
+                                        editor.putString("ticket_id", ticketId);
+                                        editor.putString("future_bus_timestamp", _futureBusTimestamp);
+                                        editor.putInt("bus_fare", busFare);
+                                        editor.apply();
+                                        context.startActivity(new Intent(context, ViewTicketActivity.class));
+
+                                    }
+
+                            }
+
+                        });
+
+            else Toast.makeText(context, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+
+        });
+
+        if (position % 2 == 0) constraintMainBox.setBackgroundColor(context.getResources().getColor(R.color.color_blue_jeans));
 
     }
 
@@ -60,8 +210,7 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
         if (time > now || time <= 0) return "AT THE STATION";
 
         final long diff = now - time;
-
-        if (diff < MINUTE_MILLIS) return "INBOUND";
+        if (diff < minuteMillis) return "INBOUND";
 
         else return "DEPARTED";
 
@@ -69,159 +218,8 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
 
     private static Date currentDate() {
 
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         return calendar.getTime();
-
-    }
-
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        View v = LayoutInflater.from(context).inflate(R.layout.item_bus, parent, false);
-        return new ViewHolder(v);
-
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
-        final BusModel bus = busList.get(position);
-
-//        initViews
-        final Button nav_payment = holder.nav_payment;
-        final ConstraintLayout constraint_main_box = holder.constraint_main_box;
-        final ConstraintLayout constraint_hidden_box = holder.constraint_hidden_box;
-        final TextView tv_bus_number = holder.tv_bus_number;
-        final TextView tv_bus_slots = holder.tv_bus_slots;
-        final TextView tv_bus_timestamp = holder.tv_bus_timestamp;
-        final TextView tv_bus_fare = holder.tv_bus_fare;
-        final TextView tv_bus_status = holder.tv_bus_status;
-
-//        load
-        final String s_bus_id = bus.getBus_id();
-        final int i_bus_fare = bus.getBus_fare();
-        final String s_bus_fare = "PHP " + i_bus_fare + ".00";
-        final String s_bus_number = bus.getBus_number();
-        final int i_bus_slots = bus.getBus_slots();
-        final Date date_bus_timestamp = bus.getBus_timestamp();
-        final String s_bus_timestamp = "h:mm a";
-        final String s_future_bus_timestamp = "dd MMMM yyyy h:mm a";
-        final String s_bus_status = "STATUS: " + getTimeAgo(date_bus_timestamp);
-
-        dateFormat = new SimpleDateFormat(s_bus_timestamp);
-
-        tv_bus_fare.setText(s_bus_fare);
-        tv_bus_number.setText(s_bus_number);
-        tv_bus_timestamp.setText(dateFormat.format(date_bus_timestamp));
-        tv_bus_status.setText(s_bus_status);
-
-        initInstances();
-        initSharedPref();
-        load();
-
-        firebaseFirestore
-                .collection("Tickets")
-                .whereEqualTo("bus_id", s_bus_id)
-                .addSnapshotListener((value, error) ->
-                {
-
-                    if (value != null) {
-
-                        final int i_current_bus_slots = value.size();
-                        final int i_available_bus_slots = i_bus_slots - i_current_bus_slots;
-
-                        if (i_available_bus_slots != 0) {
-
-                            final String s_bus_slots = i_available_bus_slots + " slots left";
-
-                            if (!getTimeAgo(date_bus_timestamp).equals("DEPARTED"))
-                                tv_bus_slots.setText(s_bus_slots);
-
-                        } else {
-
-                            tv_bus_slots.setText("");
-                            if (constraint_hidden_box.getVisibility() == View.VISIBLE)
-                                constraint_hidden_box.setVisibility(View.GONE);
-
-                        }
-
-                    }
-
-                });
-
-        constraint_main_box.setOnClickListener(v ->
-        {
-
-            if (!getTimeAgo(date_bus_timestamp).equals("DEPARTED") && !tv_bus_slots.getText().toString().equals("")) {
-
-                if (constraint_hidden_box.getVisibility() == View.GONE)
-                    constraint_hidden_box.setVisibility(View.VISIBLE);
-
-                else constraint_hidden_box.setVisibility(View.GONE);
-
-            }
-
-        });
-
-        nav_payment.setOnClickListener(v ->
-        {
-
-            if (isConnected()) {
-
-                firebaseFirestore
-                        .collection("Tickets")
-                        .whereEqualTo("user_id", s_user_id)
-                        .whereEqualTo("bus_id", s_bus_id)
-                        .get()
-                        .addOnSuccessListener(queryDocumentSnapshots ->
-                        {
-
-                            if (queryDocumentSnapshots != null) {
-
-                                if (queryDocumentSnapshots.isEmpty()) {
-
-                                    dateFormat = new SimpleDateFormat(s_future_bus_timestamp);
-                                    final String _s_future_bus_timestamp = dateFormat.format(date_bus_timestamp);
-
-                                    editor.putString("s_bus_id", s_bus_id);
-                                    editor.putString("s_route_name", s_route_name);
-                                    editor.putString("s_bus_number", s_bus_number);
-                                    editor.putString("s_future_bus_timestamp", _s_future_bus_timestamp);
-                                    editor.putInt("i_bus_fare", i_bus_fare);
-                                    editor.apply();
-
-                                    context.startActivity(new Intent(context, PaymentActivity.class));
-
-                                } else {
-
-                                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
-                                        final TicketModel ticket = snapshot.toObject(TicketModel.class);
-                                        final String s_ticket_id = ticket.getTicket_id();
-
-                                        dateFormat = new SimpleDateFormat(s_future_bus_timestamp);
-                                        final String _s_future_bus_timestamp = dateFormat.format(date_bus_timestamp);
-
-                                        editor.putString("s_ticket_id", s_ticket_id);
-                                        editor.putString("s_future_bus_timestamp", _s_future_bus_timestamp);
-                                        editor.putInt("i_bus_fare", i_bus_fare);
-                                        editor.apply();
-
-                                        context.startActivity(new Intent(context, ViewTicketActivity.class));
-                                    }
-
-                                }
-
-                            }
-
-                        });
-
-            } else Toast.makeText(context, "No Internet Connection!", Toast.LENGTH_SHORT).show();
-
-        });
-
-        if (position % 2 == 0)
-            constraint_main_box.setBackgroundColor(context.getResources().getColor(R.color.color_blue_jeans));
 
     }
 
@@ -240,15 +238,15 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
 
     private void load() {
 
-        s_user_id = sharedPref.getString("s_user_id", String.valueOf(Context.MODE_PRIVATE));
-        s_route_name = sharedPref.getString("s_route_name", String.valueOf(Context.MODE_PRIVATE));
+        userId = sharedPref.getString("user_id", String.valueOf(Context.MODE_PRIVATE));
+        routeName = sharedPref.getString("route_name", String.valueOf(Context.MODE_PRIVATE));
 
     }
 
     private boolean isConnected() {
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
 
     }
@@ -256,33 +254,33 @@ public class BusAdapter extends RecyclerView.Adapter<BusAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
 
-        return busList.size();
+        return buses.size();
 
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        Button nav_payment;
-        ConstraintLayout constraint_main_box;
-        ConstraintLayout constraint_hidden_box;
-        TextView tv_bus_number;
-        TextView tv_bus_slots;
-        TextView tv_bus_timestamp;
-        TextView tv_bus_fare;
-        TextView tv_bus_status;
+        public Button navPayment;
+        public ConstraintLayout constraintMainBox;
+        public ConstraintLayout constraintHiddenBox;
+        public TextView tvBusNumber;
+        public TextView tvBusSlots;
+        public TextView tvBusTimestamp;
+        public TextView tvBusFare;
+        public TextView tvBusStatus;
 
         public ViewHolder(@NonNull View itemView) {
 
             super(itemView);
 
-            nav_payment = itemView.findViewById(R.id.nav_payment);
-            constraint_main_box = itemView.findViewById(R.id.constraint_main_box);
-            constraint_hidden_box = itemView.findViewById(R.id.constraint_hidden_box);
-            tv_bus_number = itemView.findViewById(R.id.tv_bus_number);
-            tv_bus_slots = itemView.findViewById(R.id.tv_bus_slots);
-            tv_bus_timestamp = itemView.findViewById(R.id.tv_bus_timestamp);
-            tv_bus_fare = itemView.findViewById(R.id.tv_bus_fare);
-            tv_bus_status = itemView.findViewById(R.id.tv_bus_status);
+            navPayment = itemView.findViewById(R.id.nav_payment);
+            constraintMainBox = itemView.findViewById(R.id.constraint_main_box);
+            constraintHiddenBox = itemView.findViewById(R.id.constraint_hidden_box);
+            tvBusNumber = itemView.findViewById(R.id.tv_bus_number);
+            tvBusSlots = itemView.findViewById(R.id.tv_bus_slots);
+            tvBusTimestamp = itemView.findViewById(R.id.tv_bus_timestamp);
+            tvBusFare = itemView.findViewById(R.id.tv_bus_fare);
+            tvBusStatus = itemView.findViewById(R.id.tv_bus_status);
 
         }
 
