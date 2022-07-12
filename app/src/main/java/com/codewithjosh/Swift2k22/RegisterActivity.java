@@ -111,7 +111,8 @@ public class RegisterActivity extends AppCompatActivity {
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
 
-        if (!isConnected()) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+        if (!isConnected())
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
         else if (userName.isEmpty()
                 || email.isEmpty()
@@ -127,9 +128,11 @@ public class RegisterActivity extends AppCompatActivity {
                 || email.contains("@.com"))
             Toast.makeText(this, "Provide a valid Email Address", Toast.LENGTH_SHORT).show();
 
-        else if (password.length() < 6) Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+        else if (password.length() < 6)
+            Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
 
-        else if (!password.equals(rePassword)) Toast.makeText(this, "Password doesn't match", Toast.LENGTH_SHORT).show();
+        else if (!password.equals(rePassword))
+            Toast.makeText(this, "Password doesn't match", Toast.LENGTH_SHORT).show();
 
         else return true;
 
@@ -154,17 +157,14 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots ->
                 {
 
-                    if (queryDocumentSnapshots != null)
-                    {
+                    if (queryDocumentSnapshots != null) {
 
-                        if (!queryDocumentSnapshots.isEmpty())
-                        {
+                        if (!queryDocumentSnapshots.isEmpty()) {
 
                             pd.dismiss();
                             Toast.makeText(this, "Username is Already Taken!", Toast.LENGTH_SHORT).show();
 
-                        }
-                        else onRegister();
+                        } else onRegister();
 
                     }
 
@@ -182,8 +182,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                     firebaseUser = firebaseAuth.getCurrentUser();
 
-                    if (firebaseUser != null)
-                    {
+                    if (firebaseUser != null) {
 
                         final int userBalance = 250;
                         final String userId = firebaseUser.getUid();
@@ -206,11 +205,14 @@ public class RegisterActivity extends AppCompatActivity {
 
                     final String _e = e.toString().toLowerCase();
 
-                    if (_e.contains("the email address is already in use by another account")) Toast.makeText(this, "Email is Already Exist!", Toast.LENGTH_SHORT).show();
+                    if (_e.contains("the email address is already in use by another account"))
+                        Toast.makeText(this, "Email is Already Exist!", Toast.LENGTH_SHORT).show();
 
-                    else if (_e.contains("a network error (such as timeout, interrupted connection or unreachable host) has occurred")) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                    else if (_e.contains("a network error (such as timeout, interrupted connection or unreachable host) has occurred"))
+                        Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
-                    else Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
 
                 });
 
@@ -229,8 +231,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                     if (documentSnapshot != null)
 
-                        if (!documentSnapshot.exists())
-                        {
+                        if (!documentSnapshot.exists()) {
 
                             documentRef
                                     .set(user)

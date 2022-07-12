@@ -110,11 +110,14 @@ public class LoginActivity extends AppCompatActivity {
         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
         if (getCurrentFocus() != null) getCurrentFocus().clearFocus();
 
-        if (!isConnected()) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+        if (!isConnected())
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
-        else if (userName.isEmpty() || password.isEmpty()) Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
+        else if (userName.isEmpty() || password.isEmpty())
+            Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
 
-        else if (password.length() < 6) Toast.makeText(this, "Password Must be at least 6 characters", Toast.LENGTH_SHORT).show();
+        else if (password.length() < 6)
+            Toast.makeText(this, "Password Must be at least 6 characters", Toast.LENGTH_SHORT).show();
 
         else return true;
 
@@ -139,21 +142,18 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots ->
                 {
 
-                    if (queryDocumentSnapshots != null)
-                    {
+                    if (queryDocumentSnapshots != null) {
 
                         if (!queryDocumentSnapshots.isEmpty())
 
-                            for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots)
-                            {
+                            for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
 
                                 final UserModel user = snapshot.toObject(UserModel.class);
                                 onLogin(user);
 
                             }
 
-                        else
-                        {
+                        else {
 
                             pd.dismiss();
                             Toast.makeText(this, "User Doesn't Exist!", Toast.LENGTH_SHORT).show();
@@ -179,8 +179,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         firebaseUser = authResult.getUser();
 
-                        if (firebaseUser != null)
-                        {
+                        if (firebaseUser != null) {
 
                             final String userId = firebaseUser.getUid();
 
@@ -200,11 +199,14 @@ public class LoginActivity extends AppCompatActivity {
 
                         final String _e = e.toString().toLowerCase();
 
-                        if (_e.contains("the password is invalid or the user does not have a password")) Toast.makeText(this, "Incorrect Password!", Toast.LENGTH_SHORT).show();
+                        if (_e.contains("the password is invalid or the user does not have a password"))
+                            Toast.makeText(this, "Incorrect Password!", Toast.LENGTH_SHORT).show();
 
-                        else if (_e.contains("a network error (such as timeout, interrupted connection or unreachable host) has occurred")) Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                        else if (_e.contains("a network error (such as timeout, interrupted connection or unreachable host) has occurred"))
+                            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
-                        else Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(this, "Please Contact Your Service Provider", Toast.LENGTH_SHORT).show();
 
                     });
 

@@ -34,6 +34,13 @@ public class TicketActivity extends AppCompatActivity {
     private TicketAdapter ticketAdapter;
     private List<TicketModel> tickets;
 
+    private static Date currentDate() {
+
+        final Calendar calendar = Calendar.getInstance();
+        return calendar.getTime();
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -60,8 +67,7 @@ public class TicketActivity extends AppCompatActivity {
 
     }
 
-    private void initRecyclerView()
-    {
+    private void initRecyclerView() {
 
         recyclerTicket.setHasFixedSize(true);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -95,12 +101,12 @@ public class TicketActivity extends AppCompatActivity {
                 .addSnapshotListener((value, error) ->
                 {
 
-                    if (value != null)
-                    {
+                    if (value != null) {
 
                         if (isConnected()) onLoadTickets(value);
 
-                        else Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -134,8 +140,7 @@ public class TicketActivity extends AppCompatActivity {
 
             final long diff = now - time;
 
-            if (diff < 30 * minuteMillis)
-            {
+            if (diff < 30 * minuteMillis) {
 
                 tickets.add(ticket);
                 Collections.sort(tickets, TicketModel.comparator);
@@ -144,13 +149,6 @@ public class TicketActivity extends AppCompatActivity {
 
         }
         ticketAdapter.notifyDataSetChanged();
-
-    }
-
-    private static Date currentDate() {
-
-        final Calendar calendar = Calendar.getInstance();
-        return calendar.getTime();
 
     }
 

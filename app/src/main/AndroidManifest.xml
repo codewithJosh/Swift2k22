@@ -40,7 +40,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="nosensor" >
+            android:screenOrientation="nosensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
